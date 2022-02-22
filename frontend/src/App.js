@@ -1,19 +1,27 @@
-// import { Route } from "react-router-dom";
-import { HashRouter as Router, Route, NavLink } from "react-router-dom";
-import React, { Component } from "react";
 import "./App.css";
-import Home from "./Pages/Home";
-import ChatPage from "./Pages/ChatPage";
-import SignIn from "./Pages/Signin";
-import SignUp from "./Pages/Signup";
+import Signin from "./Components/Auth/Signin.js";
+import Signup from "./Components/Auth/Signup.js";
+import Dashboard from "./Components/Dashboard/Dashboard.js";
+import Profile from "./Components/Dashboard/Profile.js";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div>
-      <Route path="/sign-up" component={SignUp} />
-      <Route path="/sign-in" component={SignIn} />
-      <Route path="/home" component={Home} />
-      <Route path="/chat" component={ChatPage} />
+    <div className="App">
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<Signup />} />
+          <Route path="/login" element={<Signin />} />
+          <Route
+            path="/dashboard"
+            element={localStorage.getItem("token") ? <Dashboard /> : <Signin />}
+          />
+          <Route
+            path="/profile"
+            element={localStorage.getItem("token") ? <Profile /> : <Signin />}
+          />
+        </Routes>
+      </Router>
     </div>
   );
 }
