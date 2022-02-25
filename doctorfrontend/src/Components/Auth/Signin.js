@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import './SigninUp.css';
-import { Row, Col } from "react-bootstrap";
+
 const Signin = () => {
   // const history = useHistory()
 
@@ -44,51 +43,35 @@ const Signin = () => {
 
   return (
     <div>
-      <Row>
-        <Col className="account1">
+      <div className="account">
+        <form className="account-form" onSubmit={() => handleSubmit()}>
           <div>
-
-            <form className="account-form" onSubmit={() => handleSubmit()}>
-              <div> <h3>SignIn</h3>
-              </div>
-              <div>
-                Email
-                <input
-                  type="text"
-                  placeholder="Email"
-                  className="input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                Password
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="d-flex justify-content-center">  <button className="submit " type="submit">
-                Sign In
-              </button></div>
-
-              <div className="d-flex justify-content-center">
-                Don't have an account? <a href="/">SignUp</a>
-              </div>
-
-            </form>
+            <input
+              type="text"
+              placeholder="Email"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-        </Col>
-        <Col className="bg">
           <div>
-
+            <input
+              type="password"
+              placeholder="Password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
-        </Col>
-      </Row>
-    </div >
+          <button className="submit" type="submit">
+            Sign In
+          </button>
+        </form>
+        <p>
+          Don't have an account? <a href="/">Sign Up</a>
+        </p>
+      </div>
+    </div>
   );
 };
 

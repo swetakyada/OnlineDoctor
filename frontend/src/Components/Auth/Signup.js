@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-//import "bootstrap/dist/css/bootstrap.min.css";
-import { Row, Col, Container } from "react-bootstrap";
-import './Signup.css';
-import bg from '../../Assets/bg.jpeg';
+
 const Signup = () => {
   // const history = useHistory()
 
@@ -48,73 +45,52 @@ const Signup = () => {
 
   return (
     <div>
-      <Row>
-        <Col className="account1">
-
+      <div className="account">
+        <form className="account-form" onSubmit={() => handleSubmit()}>
           <div>
-
-            <form className="account-form" onSubmit={() => handleSubmit()}>
-              <div> <h3>SignUP</h3>
-                <h6>Create account and book your appointment</h6></div>
-              <div>
-                Username
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="input"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div>
-                Email
-                <input
-                  type="text"
-                  placeholder="Email"
-                  className="input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                Password
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                Confirm Password
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="input"
-                  value={cpassword}
-                  onChange={(e) => setCpassword(e.target.value)}
-                />
-              </div>
-              <div className=" d-flex justify-content-center">
-                <button className="submit" type="submit">
-                  Sign Up
-                </button>
-              </div>
-
-              <p className=" d-flex justify-content-center">
-                Already have an account? <a href="/login">Sign In</a>
-              </p>
-            </form>
+            <input
+              type="text"
+              placeholder="Username"
+              className="input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
-        </Col>
-        <Col className="bg">
           <div>
-
+            <input
+              type="text"
+              placeholder="Email"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-        </Col>
-      </Row>
-
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              className="input"
+              value={cpassword}
+              onChange={(e) => setCpassword(e.target.value)}
+            />
+          </div>
+          <button className="submit" type="submit">
+            Sign Up
+          </button>
+        </form>
+        <p>
+          Already have an account? <a href="/login">Sign In</a>
+        </p>
+      </div>
     </div>
   );
 };
