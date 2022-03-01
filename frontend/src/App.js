@@ -5,7 +5,7 @@ import Dashboard from "./Components/Dashboard/Dashboard.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Appointment from "./Components/Dashboard/Appointment";
 import Chat from "./Components/Dashboard/Chat";
-
+import UpdateProfile from "./Components/Dashboard/Profile";
 function App() {
   return (
     <div className="App">
@@ -24,6 +24,10 @@ function App() {
           <Route
             path="/chats"
             element={localStorage.getItem("id") ? <Chat /> : <Signin />}
+          />
+          <Route
+            path="/profile"
+            element={localStorage.getItem("id") ? <UpdateProfile /> : <Signin />}
           />
         </Routes>
       </Router>

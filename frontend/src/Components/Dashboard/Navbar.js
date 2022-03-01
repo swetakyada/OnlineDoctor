@@ -23,6 +23,9 @@ export default class NavBar extends Component {
             <Nav.Link href="/appointments">Appointments</Nav.Link>
           </Nav.Item>
           <Nav.Item>
+            <Nav.Link href="/profile">Profile</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
             <Nav.Link
               href="/login"
               onClick={(e) => {

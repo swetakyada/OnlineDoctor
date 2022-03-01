@@ -41,13 +41,17 @@ export default function Dashboard() {
             <Nav.Link href="/dashboard">Your Chat</Nav.Link>
           </Nav.Item>
           <Nav.Item>
+            <Nav.Link href="/profile">Profile</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+
             <Nav.Link
               href="/login"
-              // onClick={(e) => {
-              //   localStorage.removeItem("did");
-              //   localStorage.removeItem("dname");
-              //   localStorage.removeItem("demail");
-              // }}
+            // onClick={(e) => {
+            //   localStorage.removeItem("did");
+            //   localStorage.removeItem("dname");
+            //   localStorage.removeItem("demail");
+            // }}
             >
               Logout
             </Nav.Link>

@@ -15,7 +15,7 @@
     margin: 15px auto;
     background-color: white;
     border-radius: 5px;
-    padding: 70px 0px 0px 70px;
+    padding: 10px 0px 0px 70px;
     display: flex;
     flex-direction: column;
 }
@@ -35,7 +35,7 @@
 
 .input {
     margin-top: 10px;
-    padding: 15px;
+    padding: 10px;
     height: 40px;
     min-width: 350px;
     width: 100%;
