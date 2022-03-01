@@ -50,7 +50,12 @@ export const loginDoctor = async (req, res) => {
       "secret123"
     );
 
-    return res.json({ status: "ok", doctor: token });
+    return res.json({
+      status: "ok",
+      id: doctor._id,
+      name: doctor.name,
+      email: doctor.email,
+    });
   } else {
     return res.json({ status: "error", error: "Invalid Password" });
   }

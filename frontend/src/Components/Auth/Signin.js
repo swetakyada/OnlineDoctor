@@ -1,14 +1,12 @@
 import React, { useState } from "react";
+import "./Signup.css";
+import { Row, Col } from "react-bootstrap";
 
 const Signin = () => {
-  // const history = useHistory()
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
-    // event.preventDefault();
-
     try {
       if (!(email && password)) {
         alert("Invalid input");
@@ -29,7 +27,9 @@ const Signin = () => {
       const data = await response.json();
 
       if (data.status === "ok") {
-        localStorage.setItem("token", data.user);
+        localStorage.setItem("id", data.id);
+        localStorage.setItem("name", data.name);
+        localStorage.setItem("email", data.email);
         alert("User Logged in successfully!!");
         window.location = "/dashboard";
       } else {
@@ -43,34 +43,50 @@ const Signin = () => {
 
   return (
     <div>
-      <div className="account">
-        <form className="account-form" onSubmit={() => handleSubmit()}>
+      <Row>
+        <Col className="account1">
           <div>
-            <input
-              type="text"
-              placeholder="Email"
-              className="input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <form className="account-form" onSubmit={() => handleSubmit()}>
+              <div>
+                {" "}
+                <h3>SignIn</h3>
+              </div>
+
+              <div>
+                Email
+                <input
+                  type="text"
+                  placeholder="Enter your email address"
+                  className="input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                Password
+                <input
+                  type="password"
+                  placeholder="Enter your password"
+                  className="input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className=" d-flex justify-content-center">
+                <button className="submit" type="submit">
+                  Sign In
+                </button>
+              </div>
+              <p className=" d-flex justify-content-center">
+                Don't have an account? <a href="/">Sign Up</a>
+              </p>
+            </form>
           </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button className="submit" type="submit">
-            Sign In
-          </button>
-        </form>
-        <p>
-          Don't have an account? <a href="/">Sign Up</a>
-        </p>
-      </div>
+        </Col>
+        <Col className="bg">
+          <div></div>
+        </Col>
+      </Row>
     </div>
   );
 };

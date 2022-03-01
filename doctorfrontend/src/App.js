@@ -12,13 +12,9 @@ function App() {
           <Route exact path="/" element={<Signup />} />
           <Route path="/login" element={<Signin />} />
           <Route
-            path="/home"
-            element={localStorage.getItem("token") ? <Dashboard /> : <Signin />}
+            path="/dashboard"
+            element={localStorage.getItem("did") ? <Dashboard /> : <Signin />}
           />
-          {/* <Route
-            path="/profile"
-            element={localStorage.getItem("token") ? <Profile /> : <Signin />}
-          /> */}
         </Routes>
       </Router>
     </div>

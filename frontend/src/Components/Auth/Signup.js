@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+//import "bootstrap/dist/css/bootstrap.min.css";
+import { Row, Col } from "react-bootstrap";
+import "./Signup.css";
 
 const Signup = () => {
   // const history = useHistory()
@@ -30,7 +33,7 @@ const Signup = () => {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (data.status === "ok") {
         alert("User registered successfully!!");
         window.location = "/login";
@@ -45,52 +48,71 @@ const Signup = () => {
 
   return (
     <div>
-      <div className="account">
-        <form className="account-form" onSubmit={() => handleSubmit()}>
+      <Row>
+        <Col className="account1">
           <div>
-            <input
-              type="text"
-              placeholder="Username"
-              className="input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <form className="account-form" onSubmit={() => handleSubmit()}>
+              <div>
+                {" "}
+                <h3>SignUP</h3>
+                <h6>Create account and book your appointment</h6>
+              </div>
+              <div>
+                Username
+                <input
+                  type="text"
+                  placeholder="Username"
+                  className="input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div>
+                Email
+                <input
+                  type="text"
+                  placeholder="Email"
+                  className="input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                Password
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div>
+                Confirm Password
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  className="input"
+                  value={cpassword}
+                  onChange={(e) => setCpassword(e.target.value)}
+                />
+              </div>
+              <div className=" d-flex justify-content-center">
+                <button className="submit" type="submit">
+                  Sign Up
+                </button>
+              </div>
+
+              <p className=" d-flex justify-content-center">
+                Already have an account? <a href="/login">Sign In</a>
+              </p>
+            </form>
           </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Email"
-              className="input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              className="input"
-              value={cpassword}
-              onChange={(e) => setCpassword(e.target.value)}
-            />
-          </div>
-          <button className="submit" type="submit">
-            Sign Up
-          </button>
-        </form>
-        <p>
-          Already have an account? <a href="/login">Sign In</a>
-        </p>
-      </div>
+        </Col>
+        <Col className="bg">
+          <div></div>
+        </Col>
+      </Row>
     </div>
   );
 };

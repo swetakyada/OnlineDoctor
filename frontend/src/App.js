@@ -2,8 +2,9 @@ import "./App.css";
 import Signin from "./Components/Auth/Signin.js";
 import Signup from "./Components/Auth/Signup.js";
 import Dashboard from "./Components/Dashboard/Dashboard.js";
-import Profile from "./Components/Dashboard/Profile.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Appointment from "./Components/Dashboard/Appointment";
+import Chat from "./Components/Dashboard/Chat";
 
 function App() {
   return (
@@ -14,11 +15,15 @@ function App() {
           <Route path="/login" element={<Signin />} />
           <Route
             path="/dashboard"
-            element={localStorage.getItem("token") ? <Dashboard /> : <Signin />}
+            element={localStorage.getItem("id") ? <Dashboard /> : <Signin />}
           />
           <Route
-            path="/profile"
-            element={localStorage.getItem("token") ? <Profile /> : <Signin />}
+            path="/appointments"
+            element={localStorage.getItem("id") ? <Appointment /> : <Signin />}
+          />
+          <Route
+            path="/chats"
+            element={localStorage.getItem("id") ? <Chat /> : <Signin />}
           />
         </Routes>
       </Router>

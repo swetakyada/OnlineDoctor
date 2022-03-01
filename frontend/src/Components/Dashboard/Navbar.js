@@ -5,31 +5,39 @@ import "./Dashboard.css";
 import { FaUserCircle } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 
+var username = localStorage.getItem("name");
+console.log(localStorage.getItem("id"));
+
 export default class NavBar extends Component {
   render() {
     return (
       <Navbar>
         <Container>
           <Navbar.Brand>
-            {" "}
-            <Nav.Link href="/home">Online Doctor</Nav.Link>
+            <Nav.Link href="/dashboard">Online Doctor</Nav.Link>
           </Navbar.Brand>
           <Nav.Item>
-            <Nav.Link href="/home">Your Chat</Nav.Link>
+            <Nav.Link href="/chats">Your Chat</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/home">About Us</Nav.Link>
+            <Nav.Link href="/appointments">Appointments</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/home">Appointments</Nav.Link>
+            <Nav.Link
+              href="/login"
+              onClick={(e) => {
+                localStorage.removeItem("id");
+                localStorage.removeItem("name");
+                localStorage.removeItem("email");
+              }}
+            >
+              Logout
+            </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/home">Logout</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <LinkContainer to="/profile">
-              <Nav.Link to="profile">
-                <FaUserCircle />
+            <LinkContainer to="/dashboard">
+              <Nav.Link to="dashboard">
+                <FaUserCircle /> {"Hello " + username}
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import userRoutes from "./routes/user.js";
 import doctorRoutes from "./routes/doctor.js";
+import appointmentRoutes from "./routes/appointment.js";
+import chatRoutes from "./routes/chat.js";
 
 const app = express();
 
@@ -11,6 +13,8 @@ app.use(cors());
 
 app.use("/user", userRoutes);
 app.use("/doctor", doctorRoutes);
+app.use("/appointment", appointmentRoutes);
+app.use("/chat", chatRoutes);
 
 const CONNECTION_URL =
   "mongodb+srv://onlinedoctor:onlinedoctor@cluster0.2cjnd.mongodb.net/AppData?retryWrites=true&w=majority";
