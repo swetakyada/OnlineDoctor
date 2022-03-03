@@ -1,6 +1,7 @@
 import Appointment from "../models/appointment.js";
 
 export const AddAppointment = async (req, res) => {
+  console.log();
   const newAppointment = new Appointment({
     user: req.body.userId,
     doctor: req.body.doctorId,
@@ -19,16 +20,15 @@ export const AddAppointment = async (req, res) => {
         JSON.parse(JSON.stringify({ status: "ok", appointment: appointment }))
       )
     )
-    .catch((err) =>
-      console.log(
-        res.json({ status: "error", error: "Error adding appointment" })
-      )
-    );
+    .catch((err) => {
+      console.log(err);
+      res.json({ status: "error", error: "Error adding appointment" });
+    });
 };
 
 export const GetAppointments = async (req, res) => {
   console.log(req.body);
-  Appointment.find({ user: req.body.userid })
+  Appointment.find({ user: req.body.id })
     .then((appointments) => {
       console.log(appointments);
       res.json(appointments);

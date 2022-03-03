@@ -1,5 +1,5 @@
 import Doctor from "../models/doctor.js";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export const createDoctor = async (req, res) => {
@@ -42,13 +42,13 @@ export const loginDoctor = async (req, res) => {
   );
 
   if (isPasswordValid) {
-    const token = jwt.sign(
-      {
-        name: doctor.name,
-        email: doctor.email,
-      },
-      "secret123"
-    );
+    // const token = jwt.sign(
+    //   {
+    //     name: doctor.name,
+    //     email: doctor.email,
+    //   },
+    //   "secret123"
+    // );
 
     return res.json({
       status: "ok",

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./search.css";
 import doc from "../../Assets/doc.png";
-import JSONDATA from "../../Assets/MOCK_DATA.json";
 import "./Doclist.css";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import AppointmentModal from "./AppointmentModal";
@@ -15,28 +14,29 @@ const Search = () => {
   const [Doctor, SetDoctor] = useState("");
   const [DoctorId, SetDoctorId] = useState("");
 
-  const toggle = () => { SetModal(!Modal) };
+  const toggle = () => {
+    SetModal(!Modal);
+  };
 
   useEffect(() => {
     const fecthData = () => {
-      console.log("Shreya");
-      fetch("http://localhost:5000/user/doctors", {method: "POST"})
-      .then(response => response.json()
-      .then(data => {
-        console.log(data);
-        const list = [];
-        data.forEach(function(doctor){
-          list.push({
-            "id": doctor._id,
-            "full_name": doctor.name,
-            "job_title": doctor.speciality,
-            "description": doctor.description,
-          });
-        });
-        console.log(list);
-        console.log(typeof(list));
-        SetDoctorList(list);
-      }));
+      fetch("http://localhost:5000/user/doctors", { method: "POST" }).then(
+        (response) =>
+          response.json().then((data) => {
+            console.log(data);
+            const list = [];
+            data.forEach(function (doctor) {
+              list.push({
+                id: doctor._id,
+                full_name: doctor.name,
+                job_title: doctor.speciality,
+                description: doctor.description,
+              });
+            });
+            console.log(list);
+            SetDoctorList(list);
+          })
+      );
     };
     fecthData();
   }, []);
@@ -67,67 +67,70 @@ const Search = () => {
       <div className="list-container">
         <div className="list-wrap">
           <Row>
-            {Object.keys(DoctorList).filter((key) => {
-              if (SearchDoctor === "") {
-                return 1;
-              } else if (
-                DoctorList[key].job_title
-                  .toLocaleLowerCase()
-                  .includes(SearchDoctor.toLocaleLowerCase())
-              ) {
-                return DoctorList[key];
-              }
-            }).map((key, index) => {
-              return (
-                <Col xs={4} className="pb-4" key={key}>
-                  <Card
-                    style={{
-                      width: "17rem",
-                      boxShadow: "5px 5px 5px 5px solid red",
-                    }}
-                  >
-                    <Card.Body>
-                      <Card.Title>{DoctorList[key].full_name}</Card.Title>
-                      <Card.Subtitle className="mb-1">
-                        {DoctorList[key].job_title}
-                      </Card.Subtitle>
-                      <hr style={{ color: "#fdba69", height: "2px" }} />
-                      <Card.Text
-                        style={{
-                          color: "#005f95",
-                          fontWeight: "bold",
-                          opacity: "0.9",
-                        }}
-                      >
-                        {DoctorList[key].description}
-                      </Card.Text>
-                      <center>
-                        <Button style={{ backgroundColor: "#064420" }} onClick={(e) => {
-                          SetDoctor(e.target.getAttribute("doctor-name"));
-                          SetDoctorId(e.target.getAttribute("doctor-id"));
-                          toggle();
-                        }} 
-                        doctor-name={DoctorList[key].full_name}
-                        doctor-id={DoctorList[key].id}
+            {Object.keys(DoctorList)
+              .filter((key) => {
+                if (SearchDoctor === "") {
+                  return 1;
+                } else if (
+                  DoctorList[key].job_title
+                    .toLocaleLowerCase()
+                    .includes(SearchDoctor.toLocaleLowerCase())
+                ) {
+                  return DoctorList[key];
+                }
+              })
+              .map((key, index) => {
+                return (
+                  <Col xs={4} className="pb-4" key={key}>
+                    <Card
+                      style={{
+                        width: "17rem",
+                        boxShadow: "5px 5px 5px 5px solid red",
+                      }}
+                    >
+                      <Card.Body>
+                        <Card.Title>{DoctorList[key].full_name}</Card.Title>
+                        <Card.Subtitle className="mb-1">
+                          {DoctorList[key].job_title}
+                        </Card.Subtitle>
+                        <hr style={{ color: "#fdba69", height: "2px" }} />
+                        <Card.Text
+                          style={{
+                            color: "#005f95",
+                            fontWeight: "bold",
+                            opacity: "0.9",
+                          }}
                         >
-                          Book Appointment
-                        </Button>
-                      </center>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              );
-            })}
+                          {DoctorList[key].description}
+                        </Card.Text>
+                        <center>
+                          <Button
+                            style={{ backgroundColor: "#064420" }}
+                            onClick={(e) => {
+                              SetDoctor(e.target.getAttribute("doctor-name"));
+                              SetDoctorId(e.target.getAttribute("doctor-id"));
+                              toggle();
+                            }}
+                            doctor-name={DoctorList[key].full_name}
+                            doctor-id={DoctorList[key].id}
+                          >
+                            Book Appointment
+                          </Button>
+                        </center>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                );
+              })}
           </Row>
         </div>
       </div>
       <AppointmentModal
-          doctorName={Doctor}
-          doctorId={DoctorId}
-          modal={Modal}
-          toggle={toggle}
-          email={localStorage.getItem("email")}
-        />
+        doctorName={Doctor}
+        doctorId={DoctorId}
+        modal={Modal}
+        toggle={toggle}
+      />
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import './SigninUp.css';
+import "./SigninUp.css";
 import { Row, Col } from "react-bootstrap";
+import axios from "axios";
+
 const Signup = () => {
   // const history = useHistory()
 
@@ -13,7 +15,6 @@ const Signup = () => {
 
   const handleSubmit = async (event) => {
     // event.preventDefault();
-
     try {
       if (
         !(
@@ -30,28 +31,56 @@ const Signup = () => {
         return;
       }
       console.log(name, " ", email, " ", password);
-      const response = await fetch("http://localhost:5000/doctor/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          speciality,
-          description,
-          password,
-        }),
-      });
 
-      const data = await response.json();
+      axios
+        .post(
+          "http://localhost:5000/doctor/register",
+          {
+            name: name,
+            email: email,
+            speciality: speciality,
+            description: description,
+            password: password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          alert("wait");
+          if (response.data.status === "ok") {
+            alert("User Registered Successfully!");
+            window.location = "/login";
+          } else {
+            alert("Failed to Register the user.\n" + response.data.error);
+          }
+        });
 
-      if (data.status === "ok") {
-        alert("User registered successfully!!");
-        window.location = "/login";
-      } else {
-        alert("Falied to create the user");
-      }
+      // const response = await fetch("http://localhost:5000/doctor/register", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     name,
+      //     email,
+      //     speciality,
+      //     description,
+      //     password,
+      //   }),
+      // });
+
+      // const data = await response.json();
+
+      // if (data.status === "ok") {
+      //   alert("User registered successfully!!");
+      //   window.location = "/login";
+      // } else {
+      //   alert("Falied to create the user");
+      // }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");
@@ -64,7 +93,9 @@ const Signup = () => {
         <Col className="account1">
           <div>
             <form className="account-form1" onSubmit={() => handleSubmit()}>
-              <div> <h3>SignUP</h3>
+              <div>
+                {" "}
+                <h3>SignUP</h3>
               </div>
               <div>
                 Username
@@ -126,25 +157,24 @@ const Signup = () => {
                   onChange={(e) => setCpassword(e.target.value)}
                 />
               </div>
-              <div className="d-flex justify-content-center">  <button className="submit " type="submit">
-                Sign Up
-              </button></div>
+              <div className="d-flex justify-content-center">
+                {" "}
+                <button className="submit " type="submit">
+                  Sign Up
+                </button>
+              </div>
 
               <div className="d-flex justify-content-center">
                 Already have an account? <a href="/login">Sign In</a>
               </div>
-
-
             </form>
           </div>
         </Col>
         <Col className="bg">
-          <div>
-
-          </div>
+          <div></div>
         </Col>
       </Row>
-    </div >
+    </div>
   );
 };
 

@@ -9,37 +9,82 @@ const AppointmentModal = (props) => {
   const [gender, setGender] = useState("Select Gender");
   const [illness, setIllness] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
-  var userid = localStorage.getItem("id");
+  const id = JSON.parse(localStorage.getItem("user")).id;
 
   const submitAppointmentForm = async (e) => {
     e.preventDefault();
-    const data = JSON.stringify({
-      userId: userid,
-      doctorId: doctorId,
-      doctorName: doctorName,
-      patientName: patientName,
-      age: age,
-      gender: gender,
-      date: appointmentDate,
-      description: illness,
-    });
+    // const data = JSON.stringify({
+    //   userId: id,
+    //   doctorId: doctorId,
+    //   doctorName: doctorName,
+    //   patientName: patientName,
+    //   age: age,
+    //   gender: gender,
+    //   date: appointmentDate,
+    //   description: illness,
+    // });
     try {
-      const response = await fetch("http://localhost:5000/appointment/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: data,
-      });
-      const res = await response.json();
-      if (res.status === "ok") {
-        alert("Added appointment successfully");
-      } else {
-        document.getElementById("alert").classList.remove("d-none");
-        document.getElementById("alert").innerText = res.error;
-      }
+      axios
+        .all([
+          axios.post(
+            "http://localhost:5000/appointment/add",
+            {
+              userId: id,
+              doctorId: doctorId,
+              doctorName: doctorName,
+              patientName: patientName,
+              age: age,
+              gender: gender,
+              date: appointmentDate,
+              description: illness,
+            },
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          ),
+          axios.post(
+            "http://localhost:5000/chat/create",
+            {
+              userId: id,
+              userName: patientName,
+              doctorId: doctorId,
+              doctorName: doctorName,
+            },
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          ),
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            if (res1.data.status === "ok" && res2.data.status === "ok") {
+              alert("Appointment registered and chat created");
+            } else if (res1.data.status === "ok") {
+              alert("Appointment registered");
+            } else if (res2.data.status === "ok") {
+              alert("Chat created");
+            } else {
+              alert("Nothing done!!");
+            }
+          })
+        );
+
+      // const response = await fetch("http://localhost:5000/appointment/add", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: data,
+      // });
+      // const res = await response.json();
+      // if (res.status === "ok") {
+      //   alert("Added appointment successfully");
+      // } else {
+      //   document.getElementById("alert").classList.remove("d-none");
+      //   document.getElementById("alert").innerText = res.error;
+      // }
       toggle();
-      setPatientName("Select Gender");
+      setPatientName("");
       setAge(0);
       setGender("Select Gender");
       setIllness("");

@@ -5,9 +5,6 @@ import "./Dashboard.css";
 import { FaUserCircle } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 
-var username = localStorage.getItem("name");
-console.log(localStorage.getItem("id"));
-
 export default class NavBar extends Component {
   render() {
     return (
@@ -23,24 +20,20 @@ export default class NavBar extends Component {
             <Nav.Link href="/appointments">Appointments</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/profile">Profile</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
             <Nav.Link
               href="/login"
               onClick={(e) => {
-                localStorage.removeItem("id");
-                localStorage.removeItem("name");
-                localStorage.removeItem("email");
+                localStorage.removeItem("user");
               }}
             >
               Logout
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <LinkContainer to="/dashboard">
-              <Nav.Link to="dashboard">
-                <FaUserCircle /> {"Hello " + username}
+            <LinkContainer to="/profile">
+              <Nav.Link href="/profile">
+                <FaUserCircle />{" "}
+                {"Hello " + JSON.parse(localStorage.getItem("user")).name}
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>

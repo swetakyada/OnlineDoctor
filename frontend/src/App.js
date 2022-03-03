@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Appointment from "./Components/Dashboard/Appointment";
 import Chat from "./Components/Dashboard/Chat";
 import UpdateProfile from "./Components/Dashboard/Profile";
+
 function App() {
   return (
     <div className="App">
@@ -15,19 +16,23 @@ function App() {
           <Route path="/login" element={<Signin />} />
           <Route
             path="/dashboard"
-            element={localStorage.getItem("id") ? <Dashboard /> : <Signin />}
+            element={localStorage.getItem("user") ? <Dashboard /> : <Signin />}
           />
           <Route
             path="/appointments"
-            element={localStorage.getItem("id") ? <Appointment /> : <Signin />}
+            element={
+              localStorage.getItem("user") ? <Appointment /> : <Signin />
+            }
           />
           <Route
             path="/chats"
-            element={localStorage.getItem("id") ? <Chat /> : <Signin />}
+            element={localStorage.getItem("user") ? <Chat /> : <Signin />}
           />
           <Route
             path="/profile"
-            element={localStorage.getItem("id") ? <UpdateProfile /> : <Signin />}
+            element={
+              localStorage.getItem("user") ? <UpdateProfile /> : <Signin />
+            }
           />
         </Routes>
       </Router>

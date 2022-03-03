@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Signup.css";
 import { Row, Col } from "react-bootstrap";
+import axios from "axios";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -13,28 +14,58 @@ const Signin = () => {
         return;
       }
       console.log(email, " ", password);
-      const response = await fetch("http://localhost:5000/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      // const response = await fetch("http://localhost:5000/user/login", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email,
+      //     password,
+      //   }),
+      // });
 
-      const data = await response.json();
+      axios
+        .post(
+          "http://localhost:5000/user/login",
+          {
+            email: email,
+            password: password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data.status === "ok") {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                id: response.data.id,
+                name: response.data.name,
+                email: response.data.email,
+              })
+            );
+            alert("User Logged in successfully!!");
+            window.location = "/dashboard";
+          } else {
+            alert(response.data.error);
+          }
+        });
 
-      if (data.status === "ok") {
-        localStorage.setItem("id", data.id);
-        localStorage.setItem("name", data.name);
-        localStorage.setItem("email", data.email);
-        alert("User Logged in successfully!!");
-        window.location = "/dashboard";
-      } else {
-        alert(data.error);
-      }
+      // const data = await response.json();
+
+      // if (data.status === 200) {
+      //   localStorage.setItem("id", data.id);
+      //   localStorage.setItem("name", data.name);
+      //   localStorage.setItem("email", data.email);
+      //   alert("User Logged in successfully!!");
+      //   window.location = "/dashboard";
+      // } else {
+      //   alert(data.error);
+      // }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");

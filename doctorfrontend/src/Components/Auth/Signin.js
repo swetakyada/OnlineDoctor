@@ -1,40 +1,70 @@
 import React, { useState } from "react";
 import "./SigninUp.css";
 import { Row, Col } from "react-bootstrap";
+import axios from "axios";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
       if (!(email && password)) {
         alert("Invalid input");
         return;
       }
       console.log(email, " ", password);
-      const response = await fetch("http://localhost:5000/doctor/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
 
-      const data = await response.json();
+      axios
+        .post(
+          "http://localhost:5000/doctor/login",
+          {
+            email: email,
+            password: password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          alert("wait");
+          if (response.data.status === "ok") {
+            localStorage.setItem("did", response.data.id);
+            localStorage.setItem("dname", response.data.name);
+            localStorage.setItem("demail", response.data.email);
+            alert("User Logged in successfully!!");
+            window.location = "/dashboard";
+          } else {
+            alert(response.data.error);
+          }
+        });
 
-      if (data.status === "ok") {
-        localStorage.setItem("did", data.id);
-        localStorage.setItem("dname", data.name);
-        localStorage.setItem("demail", data.email);
-        alert("User Logged in successfully!!");
-        window.location = "/dashboard";
-      } else {
-        alert(data.error);
-      }
+      // const response = await fetch("http://localhost:5000/doctor/login", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email,
+      //     password,
+      //   }),
+      // });
+
+      // const data = await response.json();
+
+      // if (data.status === "ok") {
+      //   localStorage.setItem("did", data.id);
+      //   localStorage.setItem("dname", data.name);
+      //   localStorage.setItem("demail", data.email);
+      //   alert("User Logged in successfully!!");
+      //   window.location = "/dashboard";
+      // } else {
+      //   alert(data.error);
+      // }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");

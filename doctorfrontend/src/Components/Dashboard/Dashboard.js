@@ -6,6 +6,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 
 var dname = localStorage.getItem("dname");
+console.log(dname);
+
 export default function Dashboard() {
   const [Appointments, SetAppointments] = useState("");
   var doctorid = localStorage.getItem("did");
@@ -44,14 +46,13 @@ export default function Dashboard() {
             <Nav.Link href="/profile">Profile</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-
             <Nav.Link
               href="/login"
-            // onClick={(e) => {
-            //   localStorage.removeItem("did");
-            //   localStorage.removeItem("dname");
-            //   localStorage.removeItem("demail");
-            // }}
+              onClick={(e) => {
+                localStorage.removeItem("did");
+                localStorage.removeItem("dname");
+                localStorage.removeItem("demail");
+              }}
             >
               Logout
             </Nav.Link>

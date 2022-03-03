@@ -4,9 +4,10 @@ import "./Appointment.css";
 
 const ChatPage = () => {
   const [Chats, SetChats] = useState("");
+  const id = JSON.parse(localStorage.getItem("user")).id;
+  const [chatId, SetChatId] = useState("");
 
   useEffect(() => {
-    const userid = localStorage.getItem("id");
     const fecthData = () => {
       fetch("http://localhost:5000/chat/uget", {
         method: "POST",
@@ -14,17 +15,20 @@ const ChatPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: userid,
+          id: id,
         }),
       }).then((response) =>
         response.json().then((data) => {
-          console.log(data);
           SetChats(data);
         })
       );
     };
     fecthData();
   }, []);
+
+  const handleClick = (e) => {
+    SetChatId(e.target.getAttribute("chat-id"));
+  };
 
   return (
     <div>
@@ -54,6 +58,8 @@ const ChatPage = () => {
                             width: "120px",
                             fontSize: "18px",
                           }}
+                          onClick={handleClick}
+                          chat-id={Chats[key]._id}
                         >
                           Chat Now
                         </Button>

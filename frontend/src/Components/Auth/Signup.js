@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 //import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Col } from "react-bootstrap";
+import axios from "axios";
 import "./Signup.css";
 
 const Signup = () => {
@@ -20,26 +21,48 @@ const Signup = () => {
         return;
       }
       console.log(name, " ", email, " ", password);
-      const response = await fetch("http://localhost:5000/user/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
+      // const response = await fetch("http://localhost:5000/user/register", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     name,
+      //     email,
+      //     password,
+      //   }),
+      // });
+      axios
+        .post(
+          "http://localhost:5000/user/register",
+          {
+            name: name,
+            email: email,
+            password: password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data.status === "ok") {
+            alert("User Registered Successfully!");
+            window.location = "/login";
+          } else {
+            alert("Failed to Register the user.\n" + response.data.error);
+          }
+        });
 
-      const data = await response.json();
-      console.log(data);
-      if (data.status === "ok") {
-        alert("User registered successfully!!");
-        window.location = "/login";
-      } else {
-        alert("Falied to create the user");
-      }
+      // const data = await response.json();
+      // console.log(data);
+      // if (data.status === 200) {
+      //   alert("User registered successfully!!");
+      //   window.location = "/login";
+      // } else {
+      //   alert("Falied to create the user");
+      // }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");

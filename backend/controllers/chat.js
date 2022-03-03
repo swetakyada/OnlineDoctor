@@ -4,20 +4,20 @@ export const createChat = async (req, res) => {
   console.log(req.body);
   try {
     var chat = await Chat.findOne({
-      user: req.body.userid,
-      doctor: req.body.doctorid,
+      user: req.body.userId,
+      doctor: req.body.doctorId,
     });
 
     if (!chat) {
       chat = new Chat({
-        user: req.body.userid,
-        doctor: req.body.doctorid,
+        user: req.body.userId,
+        doctor: req.body.doctorId,
         userName: req.body.userName,
         doctorName: req.body.doctorName,
       });
       await chat.save();
     }
-    res.json(JSON.parse(JSON.stringify({ status: "ok", chat: chat })));
+    res.json({ status: "ok", chat: chat });
   } catch (err) {
     console.log(err);
     res.json({ status: "error", error: err });

@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { Card, Button } from "react-bootstrap";
 import "./Appointment.css";
+import axios from "axios";
 
 const AppointmentPage = () => {
   const [Appointments, SetAppointments] = useState("");
-  var userid = localStorage.getItem("id");
+  const [doctorId, SetDoctorId] = useState("");
+  const id = JSON.parse(localStorage.getItem("user")).id;
 
   useEffect(() => {
     const fecthData = () => {
-      fetch("http://localhost:5000/appointment/get", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userid,
-        }),
-      }).then((response) =>
-        response.json().then((data) => {
-          console.log(data);
-          SetAppointments(data);
-        })
-      );
+      axios
+        .post(
+          "http://localhost:5000/appointment/get",
+          {
+            id: id,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          SetAppointments(response.data);
+        });
     };
     fecthData();
   }, []);
 
   return (
     <div>
+      <br />
       <center>
-        <h5></h5>
         <h4 className="pb-3">Your Appointments</h4>
       </center>
       <div className="appointment-card">
@@ -38,7 +41,7 @@ const AppointmentPage = () => {
             .filter((key) => key)
             .map((key, index) => {
               return (
-                <div>
+                <div id={key}>
                   <Card>
                     <Card.Body>
                       <Card.Title>
@@ -57,6 +60,10 @@ const AppointmentPage = () => {
                             width: "120px",
                             fontSize: "18px",
                           }}
+                          onClick={(e) => {
+                            SetDoctorId(e.target.getAttribute("doctor-id"));
+                          }}
+                          doctor-id={Appointments[key].doctor}
                         >
                           Start Now
                         </Button>

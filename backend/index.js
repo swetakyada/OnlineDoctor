@@ -5,6 +5,8 @@ import userRoutes from "./routes/user.js";
 import doctorRoutes from "./routes/doctor.js";
 import appointmentRoutes from "./routes/appointment.js";
 import chatRoutes from "./routes/chat.js";
+import { Server } from "socket.io";
+import http from "http";
 
 const app = express();
 
@@ -16,7 +18,7 @@ app.use("/doctor", doctorRoutes);
 app.use("/appointment", appointmentRoutes);
 app.use("/chat", chatRoutes);
 
-const CONNECTION_URL =
+const CONNECTION_URL = //"mongodb://localhost:27017/MyDb";
   "mongodb+srv://onlinedoctor:onlinedoctor@cluster0.2cjnd.mongodb.net/AppData?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 5000;
 
@@ -25,7 +27,17 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() =>
-    app.listen(PORT, () => console.log(`Server Running on port ${PORT}`))
-  )
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
+    console.log("Database Connected");
+  })
   .catch((error) => console.log(error.message));
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    //except socket communication between this specofic url.
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
