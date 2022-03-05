@@ -1,42 +1,34 @@
 import React, { useState } from "react";
-//import "bootstrap/dist/css/bootstrap.min.css";
+import "./Signup.css";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
-import "./Signup.css";
 
-const Signup = () => {
-  // const history = useHistory()
-
-  const [name, setName] = useState("");
+const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cpassword, setCpassword] = useState("");
 
   const handleSubmit = async (event) => {
-    // event.preventDefault();
-
     try {
-      if (!(name && email && password && cpassword && password === cpassword)) {
+      if (!(email && password)) {
         alert("Invalid input");
         return;
       }
-      console.log(name, " ", email, " ", password);
-      // const response = await fetch("http://localhost:5000/user/register", {
+      console.log(email, " ", password);
+      // const response = await fetch("http://localhost:5000/user/login", {
       //   method: "POST",
       //   headers: {
       //     "Content-Type": "application/json",
       //   },
       //   body: JSON.stringify({
-      //     name,
       //     email,
       //     password,
       //   }),
       // });
+
       axios
         .post(
-          "http://localhost:5000/user/register",
+          "http://localhost:5000/user/login",
           {
-            name: name,
             email: email,
             password: password,
           },
@@ -48,20 +40,31 @@ const Signup = () => {
         )
         .then((response) => {
           if (response.data.status === "ok") {
-            alert("User Registered Successfully!");
-            window.location = "/login";
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                id: response.data.id,
+                name: response.data.name,
+                email: response.data.email,
+              })
+            );
+            // alert("User Logged in successfully!!");
+            window.location = "/dashboard";
           } else {
-            alert("Failed to Register the user.\n" + response.data.error);
+            // alert(response.data.error);
           }
         });
 
       // const data = await response.json();
-      // console.log(data);
+
       // if (data.status === 200) {
-      //   alert("User registered successfully!!");
-      //   window.location = "/login";
+      //   localStorage.setItem("id", data.id);
+      //   localStorage.setItem("name", data.name);
+      //   localStorage.setItem("email", data.email);
+      //   alert("User Logged in successfully!!");
+      //   window.location = "/dashboard";
       // } else {
-      //   alert("Falied to create the user");
+      //   alert(data.error);
       // }
     } catch (error) {
       console.log(error);
@@ -77,24 +80,14 @@ const Signup = () => {
             <form className="account-form" onSubmit={() => handleSubmit()}>
               <div>
                 {" "}
-                <h3>SignUP</h3>
-                <h6>Create account and book your appointment</h6>
+                <h3>SignIn</h3>
               </div>
-              <div>
-                Username
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="input"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
+
               <div>
                 Email
                 <input
                   type="text"
-                  placeholder="Email"
+                  placeholder="Enter your email address"
                   className="input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -104,30 +97,19 @@ const Signup = () => {
                 Password
                 <input
                   type="password"
-                  placeholder="Password"
+                  placeholder="Enter your password"
                   className="input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <div>
-                Confirm Password
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="input"
-                  value={cpassword}
-                  onChange={(e) => setCpassword(e.target.value)}
-                />
-              </div>
               <div className=" d-flex justify-content-center">
                 <button className="submit" type="submit">
-                  Sign Up
+                  Sign In
                 </button>
               </div>
-
               <p className=" d-flex justify-content-center">
-                Already have an account? <a href="/login">Sign In</a>
+                Don't have an account? <a href="/">Sign Up</a>
               </p>
             </form>
           </div>
@@ -140,4 +122,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

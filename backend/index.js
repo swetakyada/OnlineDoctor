@@ -6,7 +6,6 @@ import doctorRoutes from "./routes/doctor.js";
 import appointmentRoutes from "./routes/appointment.js";
 import chatRoutes from "./routes/chat.js";
 import { Server } from "socket.io";
-import http from "http";
 
 const app = express();
 
@@ -28,16 +27,35 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
     console.log("Database Connected");
   })
   .catch((error) => console.log(error.message));
 
-const server = http.createServer(app);
+const server = app.listen(PORT, () =>
+  console.log(`Server started on port ${PORT}`)
+);
+
 const io = new Server(server, {
   cors: {
-    //except socket communication between this specofic url.
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    credentials: true,
   },
+});
+
+global.onlineUsers = new Map();
+
+io.on("connection", (socket) => {
+  global.chatSocket = socket;
+
+  socket.on("add-user", (userId) => {
+    onlineUsers.set(userId, socket.id);
+  });
+
+  socket.on("send-msg", (data) => {
+    console.log(onlineUsers);
+    const sendUserSocket = onlineUsers.get(data.to);
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-recieve", data.message);
+    }
+  });
 });

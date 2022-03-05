@@ -1,33 +1,24 @@
 import React, { useState } from "react";
-import "./Signup.css";
+import "./SigninUp.css";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 
-const Signin = () => {
+const DoctorSignin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
+    // event.preventDefault();
     try {
       if (!(email && password)) {
         alert("Invalid input");
         return;
       }
       console.log(email, " ", password);
-      // const response = await fetch("http://localhost:5000/user/login", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     email,
-      //     password,
-      //   }),
-      // });
 
       axios
         .post(
-          "http://localhost:5000/user/login",
+          "http://localhost:5000/doctor/login",
           {
             email: email,
             password: password,
@@ -39,30 +30,42 @@ const Signin = () => {
           }
         )
         .then((response) => {
+          console.log(response.data);
+          // alert("wait");
           if (response.data.status === "ok") {
-            localStorage.setItem(
-              "user",
-              JSON.stringify({
-                id: response.data.id,
-                name: response.data.name,
-                email: response.data.email,
-              })
-            );
-            alert("User Logged in successfully!!");
-            window.location = "/dashboard";
+            localStorage.setItem("did", response.data.id);
+            localStorage.setItem("dname", response.data.name);
+            localStorage.setItem("demail", response.data.email);
+            // alert("User Logged in successfully!!");
+            window.location = "/doctor/dashboard";
           } else {
+            console.log("error");
             alert(response.data.error);
           }
         });
 
+      // const response = await fetch("http://localhost:5000/doctor/login", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email,
+      //     password,
+      //   }),
+      // });
+      // alert("Wait");
+      // console.log(response);
+      // alert("Wait");
       // const data = await response.json();
-
-      // if (data.status === 200) {
-      //   localStorage.setItem("id", data.id);
-      //   localStorage.setItem("name", data.name);
-      //   localStorage.setItem("email", data.email);
+      // console.log(data);
+      // alert("Wait");
+      // if (data.status === "ok") {
+      //   localStorage.setItem("did", data.id);
+      //   localStorage.setItem("dname", data.name);
+      //   localStorage.setItem("demail", data.email);
       //   alert("User Logged in successfully!!");
-      //   window.location = "/dashboard";
+      //   window.location = "/doctor/dashboard";
       // } else {
       //   alert(data.error);
       // }
@@ -82,12 +85,11 @@ const Signin = () => {
                 {" "}
                 <h3>SignIn</h3>
               </div>
-
               <div>
                 Email
                 <input
                   type="text"
-                  placeholder="Enter your email address"
+                  placeholder="Email"
                   className="input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -97,20 +99,22 @@ const Signin = () => {
                 Password
                 <input
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Password"
                   className="input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <div className=" d-flex justify-content-center">
-                <button className="submit" type="submit">
+              <div className="d-flex justify-content-center">
+                {" "}
+                <button className="submit " type="submit">
                   Sign In
                 </button>
               </div>
-              <p className=" d-flex justify-content-center">
-                Don't have an account? <a href="/">Sign Up</a>
-              </p>
+
+              <div className="d-flex justify-content-center">
+                Don't have an account? <a href="/doctor">SignUp</a>
+              </div>
             </form>
           </div>
         </Col>
@@ -122,4 +126,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default DoctorSignin;

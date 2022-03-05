@@ -49,7 +49,7 @@ export const loginDoctor = async (req, res) => {
     //   },
     //   "secret123"
     // );
-
+    console.log("ok");
     return res.json({
       status: "ok",
       id: doctor._id,

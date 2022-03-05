@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./search.css";
-import doc from "../../Assets/doc.png";
+import doc from "../../../Assets/doc.png";
 import "./Doclist.css";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import AppointmentModal from "./AppointmentModal";

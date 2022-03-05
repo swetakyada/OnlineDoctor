@@ -4,6 +4,7 @@ import {
   createChat,
   getChat,
   getDoctorChats,
+  getMessages,
   getUserChats,
 } from "../controllers/chat.js";
 
@@ -14,5 +15,6 @@ router.post("/get", getChat);
 router.post("/uget", getUserChats);
 router.post("/dget", getDoctorChats);
 router.post("/add_message", addMessage);
+router.post("/get_messages", getMessages);
 
 export default router;

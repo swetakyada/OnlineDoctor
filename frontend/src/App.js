@@ -1,11 +1,16 @@
 import "./App.css";
-import Signin from "./Components/Auth/Signin.js";
-import Signup from "./Components/Auth/Signup.js";
-import Dashboard from "./Components/Dashboard/Dashboard.js";
+import Signin from "./Components/User/Auth/Signin.js";
+import Signup from "./Components/User/Auth/Signup.js";
+import Dashboard from "./Components/User/Dashboard/Dashboard.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Appointment from "./Components/Dashboard/Appointment";
-import Chat from "./Components/Dashboard/Chat";
-import UpdateProfile from "./Components/Dashboard/Profile";
+import Appointment from "./Components/User/Dashboard/Appointment";
+import Chat from "./Components/User/Dashboard/Chat";
+import UpdateProfile from "./Components/User/Dashboard/Profile";
+import DoctorSignup from "./Components/Doctor/Auth/Signup";
+import DoctorSignin from "./Components/Doctor/Auth/Signin";
+import DoctorDashboard from "./Components/Doctor/Dashboard/Dashboard";
+import DoctorProfile from "./Components/Doctor/Dashboard/Profile";
+import DoctorChatPage from "./Components/Doctor/Dashboard/ChatPage";
 
 function App() {
   return (
@@ -32,6 +37,34 @@ function App() {
             path="/profile"
             element={
               localStorage.getItem("user") ? <UpdateProfile /> : <Signin />
+            }
+          />
+          <Route exact path="/doctor" element={<DoctorSignup />} />
+          <Route path="/doctor/login" element={<DoctorSignin />} />
+          <Route
+            path="/doctor/dashboard"
+            element={
+              localStorage.getItem("did") ? (
+                <DoctorDashboard />
+              ) : (
+                <DoctorSignin />
+              )
+            }
+          />
+          <Route
+            path="/doctor/profile"
+            element={
+              localStorage.getItem("did") ? <DoctorProfile /> : <DoctorSignin />
+            }
+          />
+          <Route
+            path="/doctor/chats"
+            element={
+              localStorage.getItem("did") ? (
+                <DoctorChatPage />
+              ) : (
+                <DoctorSignin />
+              )
             }
           />
         </Routes>

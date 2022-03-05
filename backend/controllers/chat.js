@@ -27,10 +27,10 @@ export const createChat = async (req, res) => {
 export const getChat = async (req, res) => {
   console.log(req.body);
   try {
-    const chat = await Chat.find({
+    const chat = await Chat.findOne({
       _id: req.body.id,
     });
-    res.json(chat);
+    res.json({ status: "ok", chat: chat });
   } catch (err) {
     res.json({ status: "error", error: err });
   }
@@ -66,15 +66,31 @@ export const addMessage = async (req, res) => {
     const chat = await Chat.findOne({
       _id: req.body.id,
     });
+    if (!chat) {
+      res.json({ status: "error" });
+      return;
+    }
     chat.messages.push({
-      content: req.body.message,
+      content: req.body.content,
       isDoctor: req.body.isDoctor,
       time: Date.now(),
     });
     await chat.save();
     res.json({ status: "ok" });
-  } catch (err) {
+  } catch (error) {
     console.log(error);
     res.json({ status: "error" });
+  }
+};
+
+export const getMessages = async (req, res) => {
+  console.log(req.body);
+  try {
+    const chat = await Chat.findOne({
+      _id: req.body.id,
+    });
+    res.json({ status: "ok", messages: chat.messages });
+  } catch (err) {
+    res.json({ status: "error", error: err });
   }
 };
