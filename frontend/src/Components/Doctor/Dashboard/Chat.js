@@ -15,11 +15,11 @@ function ChatRoom({ room, chat, socket }) {
     const response = await axios.post(
       "http://localhost:5000/chat/get_messages",
       {
-        id: chat._id,
+        id: room,
       }
     );
     setMessageList(response.data.messages);
-  }, [click]);
+  }, [room, click]);
 
   const sendMessage = async () => {
     if (currentMessage.length > 0) {
@@ -30,20 +30,22 @@ function ChatRoom({ room, chat, socket }) {
       });
 
       await axios.post("http://localhost:5000/chat/add_message", {
-        id: chat._id,
+        id: room,
         content: currentMessage,
         isDoctor: true,
       });
       setCurrentMessage("");
-      const msgs = [...messageList];
-      msgs.push({ content: currentMessage, isDoctor: true, time: Date.now() });
-      setMessageList(msgs);
+      setMessageList((msgs) => [
+        ...msgs,
+        { content: currentMessage, isDoctor: true, time: Date.now() },
+      ]);
     }
   };
 
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-recieve", (currentMessage) => {
+        console.log("Arrival");
         setArrivalMessage({
           content: currentMessage,
           isDoctor: false,
@@ -51,17 +53,13 @@ function ChatRoom({ room, chat, socket }) {
         });
       });
     }
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
+    console.log("Add Arrival");
     if (arrivalMessage) {
-      const msgs = [...messageList];
-      msgs.push({
-        content: arrivalMessage.message,
-        isDoctor: false,
-        time: Date.now(),
-      });
-      setMessageList(msgs);
+      setMessageList((msgs) => [...msgs, arrivalMessage]);
+      // SetClick(!click);
     }
   }, [arrivalMessage]);
 
@@ -79,7 +77,6 @@ function ChatRoom({ room, chat, socket }) {
                 >
                   <div>
                     <div className="message-content">
-                      {console.log(messageList[key].content)}
                       <p>{messageList[key].content}</p>
                     </div>
                     <div className="message-meta">

@@ -1,7 +1,7 @@
 import Appointment from "../models/appointment.js";
 
 export const AddAppointment = async (req, res) => {
-  console.log();
+  console.log("Add Appointment");
   const newAppointment = new Appointment({
     user: req.body.userId,
     doctor: req.body.doctorId,
@@ -27,7 +27,7 @@ export const AddAppointment = async (req, res) => {
 };
 
 export const GetAppointments = async (req, res) => {
-  console.log(req.body);
+  console.log("Get Appointments");
   Appointment.find({ user: req.body.id })
     .then((appointments) => {
       console.log(appointments);
@@ -37,7 +37,7 @@ export const GetAppointments = async (req, res) => {
 };
 
 export const GetDoctorAppointments = async (req, res) => {
-  console.log(req.body);
+  console.log("Get Doctor Appointments");
   Appointment.find({ doctor: req.body.doctorid })
     .then((appointments) => {
       console.log(appointments);

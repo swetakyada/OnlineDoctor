@@ -25,7 +25,6 @@ const DoctorChatPage = () => {
   }, []);
 
   const handleClick = (cid) => {
-    SetRoom(cid);
     axios
       .post(
         "http://localhost:5000/chat/get",
@@ -36,6 +35,7 @@ const DoctorChatPage = () => {
         console.log(response.data.chat);
         SetChat(response.data.chat);
       });
+    SetRoom(cid);
   };
 
   useEffect(() => {

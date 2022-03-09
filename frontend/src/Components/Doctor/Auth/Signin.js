@@ -42,7 +42,8 @@ const DoctorSignin = () => {
             console.log("error");
             alert(response.data.error);
           }
-        });
+        })
+        .catch((error) => alert("Error!!"));
 
       // const response = await fetch("http://localhost:5000/doctor/login", {
       //   method: "POST",

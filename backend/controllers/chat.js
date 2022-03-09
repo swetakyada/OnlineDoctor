@@ -1,7 +1,7 @@
 import Chat from "../models/chat.js";
 
 export const createChat = async (req, res) => {
-  console.log(req.body);
+  console.log("create Chat");
   try {
     var chat = await Chat.findOne({
       user: req.body.userId,
@@ -25,7 +25,7 @@ export const createChat = async (req, res) => {
 };
 
 export const getChat = async (req, res) => {
-  console.log(req.body);
+  console.log("Get chat");
   try {
     const chat = await Chat.findOne({
       _id: req.body.id,
@@ -37,7 +37,7 @@ export const getChat = async (req, res) => {
 };
 
 export const getUserChats = async (req, res) => {
-  console.log(req.body);
+  console.log("get user chats");
   try {
     const chats = await Chat.find({
       user: req.body.id,
@@ -49,7 +49,7 @@ export const getUserChats = async (req, res) => {
 };
 
 export const getDoctorChats = async (req, res) => {
-  console.log(req.body);
+  console.log("get doctor chats");
   try {
     const chats = await Chat.find({
       doctor: req.body.id,
@@ -84,7 +84,7 @@ export const addMessage = async (req, res) => {
 };
 
 export const getMessages = async (req, res) => {
-  console.log(req.body);
+  console.log("get messages");
   try {
     const chat = await Chat.findOne({
       _id: req.body.id,
