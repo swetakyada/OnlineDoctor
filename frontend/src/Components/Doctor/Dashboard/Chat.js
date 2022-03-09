@@ -65,7 +65,9 @@ function ChatRoom({ room, chat, socket }) {
 
   return (
     <div className="chat-window">
-      <div className="chat-header"></div>
+      <div className="chat-header">
+        <center>Chat with  {chat.userName}</center>
+      </div>
       <div className="chat-body">
         <ScrollToBottom className="message-container">
           {messageList &&

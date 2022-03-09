@@ -92,27 +92,24 @@ const DoctorChatPage = () => {
       <br />
       <div>
         <Row>
-          <Col xs={4}>
+          <Col xs={4} className="chat-wrap">
             <div className="chat-card">
               <div className="chats">
                 {Object.keys(Chats)
                   .filter((key) => key)
                   .map((key, index) => {
                     return (
-                      <div>
-                        <Card
-                          onClick={() => {
-                            handleClick(Chats[key]._id);
-                          }}
-                        >
-                          <Card.Body>
-                            <Card.Title>
-                              Patient Name : {Chats[key].userName}
-                            </Card.Title>
-                          </Card.Body>
-                        </Card>
-                        <br />
+
+                      <div
+                        onClick={() => {
+                          handleClick(Chats[key]._id);
+                        }}
+                      >
+                        Patient Name : {Chats[key].userName}
+
                       </div>
+
+
                     );
                   })}
               </div>
@@ -121,9 +118,9 @@ const DoctorChatPage = () => {
           <Col>
             {room !== "" ? (
               <div>
-                <center>
-                  <h3>{Chat.userName}</h3>
-                </center>
+                {/* <center>
+                  <h5>{Chat.userName}</h5>
+                </center> */}
                 <DoctorChat room={room} chat={Chat} socket={socket} />
               </div>
             ) : (
