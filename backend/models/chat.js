@@ -26,6 +26,16 @@ const chatSchema = mongoose.Schema({
       time: { type: Date, default: Date.now },
     },
   ],
+  date: {
+    type: String,
+    required: true,
+  },
+  slot: {
+    type: Number,
+    required: true,
+    min: [0, "invalid slot"],
+    max: [3, "invalid slot"],
+  },
 });
 
 const Chat = mongoose.model("Chat", chatSchema);

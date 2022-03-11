@@ -1,125 +1,123 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import "./Signup.css";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 
-const Signin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+class Signin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+    };
+    this.onChange = this.onChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-  const handleSubmit = async (event) => {
+  onChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  async handleSubmit(e) {
+    e.preventDefault();
+    const { email, password } = this.state;
+    console.log(email, " ", password);
+
     try {
       if (!(email && password)) {
         alert("Invalid input");
         return;
       }
-      console.log(email, " ", password);
-      // const response = await fetch("http://localhost:5000/user/login", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     email,
-      //     password,
-      //   }),
-      // });
 
-      axios
-        .post(
-          "http://localhost:5000/user/login",
-          {
-            email: email,
-            password: password,
+      let response = await axios.post(
+        "http://localhost:5000/user/login",
+        {
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          if (response.data.status === "ok") {
-            localStorage.setItem(
-              "user",
-              JSON.stringify({
-                id: response.data.id,
-                name: response.data.name,
-                email: response.data.email,
-              })
-            );
-            // alert("User Logged in successfully!!");
-            window.location = "/dashboard";
-          } else {
-            // alert(response.data.error);
-          }
-        });
+        }
+      );
 
-      // const data = await response.json();
-
-      // if (data.status === 200) {
-      //   localStorage.setItem("id", data.id);
-      //   localStorage.setItem("name", data.name);
-      //   localStorage.setItem("email", data.email);
-      //   alert("User Logged in successfully!!");
-      //   window.location = "/dashboard";
-      // } else {
-      //   alert(data.error);
-      // }
+      if (response.status === 200) {
+        if (response.data.status === "ok") {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              id: response.data.id,
+              name: response.data.name,
+              email: response.data.email,
+            })
+          );
+          alert("User Logged in successfully!!");
+          window.location = "/dashboard";
+        } else {
+          alert("Error : ", response.data.error);
+        }
+      } else {
+        alert("Error : ", response.status);
+      }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");
     }
-  };
+  }
 
-  return (
-    <div>
-      <Row>
-        <Col className="account1">
-          <div>
-            <form className="account-form" onSubmit={() => handleSubmit()}>
-              <div>
-                {" "}
-                <h3>SignIn</h3>
-              </div>
-
-              <div>
-                Email
-                <input
-                  type="text"
-                  placeholder="Enter your email address"
-                  className="input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                Password
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  className="input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className=" d-flex justify-content-center">
-                <button className="submit" type="submit">
-                  Sign In
-                </button>
-              </div>
-              <p className=" d-flex justify-content-center">
-                Don't have an account? <a href="/">Sign Up</a>
-              </p>
-            </form>
-          </div>
-        </Col>
-        <Col className="bg">
-          <div></div>
-        </Col>
-      </Row>
-    </div>
-  );
-};
+  render() {
+    return (
+      <div>
+        <Row>
+          <Col className="account1">
+            <div>
+              <form className="account-form" onSubmit={this.handleSubmit}>
+                <div>
+                  <h3>SignIn</h3>
+                </div>
+                <div>
+                  Email
+                  <input
+                    type="text"
+                    placeholder="Enter your email address"
+                    className="input"
+                    name="email"
+                    value={this.email}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div>
+                  Password
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    className="input"
+                    name="password"
+                    value={this.password}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div className=" d-flex justify-content-center">
+                  <button className="submit" type="submit">
+                    Sign In
+                  </button>
+                </div>
+                <p className=" d-flex justify-content-center">
+                  Don't have an account? <a href="/">Sign Up</a>
+                </p>
+              </form>
+            </div>
+          </Col>
+          <Col className="bg">
+            <div></div>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+}
 
 export default Signin;

@@ -6,6 +6,7 @@ import {
   getDoctorChats,
   getMessages,
   getUserChats,
+  isSlotAvailable,
 } from "../controllers/chat.js";
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.post("/uget", getUserChats);
 router.post("/dget", getDoctorChats);
 router.post("/add_message", addMessage);
 router.post("/get_messages", getMessages);
+router.post("/is_available", isSlotAvailable);
 
 export default router;

@@ -1,38 +1,131 @@
-import React, { useState } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Card,
+} from "reactstrap";
 import axios from "axios";
+import "./Appointment1.css";
 
 const AppointmentModal = (props) => {
   const { doctorName, doctorId, modal, toggle } = props;
-  const [patientName, setPatientName] = useState("");
-  const [age, setAge] = useState(0);
+  const [age, setAge] = useState("");
   const [gender, setGender] = useState("Select Gender");
   const [illness, setIllness] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
-  const id = JSON.parse(localStorage.getItem("user")).id;
+  const [slots, setSlots] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [date, setDate] = useState([]);
+  const [selection, setSelection] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const ddMmYyyy = (today) => {
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1;
+    let yyyy = today.getFullYear();
+    let ans = "";
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    ans = dd + "-" + mm + "-" + yyyy;
+    return ans;
+  };
+
+  const getCurrentTime = () => {
+    let current = new Date();
+    let current_time = current.toLocaleTimeString("it-IT", {
+      hour: "numeric",
+    });
+    return current_time;
+  };
+
+  const displayDate = (time) => {
+    let display_time = (time % 12) + ":00 PM";
+    return display_time;
+  };
+
+  useEffect(() => {
+    let dt = ["", ""];
+    let current = new Date();
+    dt[0] = ddMmYyyy(current);
+    let next = new Date();
+    next.setDate(current.getDate() + 1);
+    dt[1] = ddMmYyyy(next);
+    setDate(dt);
+
+    let promises = [];
+    let slots = [
+      [
+        { startTime: 1, isAvl: false },
+        { startTime: 2, isAvl: false },
+        { startTime: 3, isAvl: false },
+        { startTime: 4, isAvl: false },
+      ],
+      [
+        { startTime: 1, isAvl: false },
+        { startTime: 2, isAvl: false },
+        { startTime: 3, isAvl: false },
+        { startTime: 4, isAvl: false },
+      ],
+    ];
+
+    for (let d = 0; d < 2; d++) {
+      for (let s = 0; s < 4; s++) {
+        if (
+          1 === d ||
+          new Date().getDay() === 0 ||
+          getCurrentTime() < slots[d][s].startTime
+        ) {
+          promises.push(
+            axios
+              .post(
+                "http://localhost:5000/chat/is_available",
+                {
+                  id: doctorId,
+                  date: date[d],
+                  slot: s,
+                },
+                {
+                  headers: { "Content-Type": "application/json" },
+                }
+              )
+              .then((res) => {
+                console.log(res.data);
+                if (res.data === null) {
+                  slots[d][s].isAvl = true;
+                }
+              })
+          );
+        }
+      }
+    }
+    Promise.all(promises)
+      .then(() => {
+        setSlots(slots);
+        setIsLoaded(true);
+      })
+      .catch(console.log);
+  }, [doctorId]);
 
   const submitAppointmentForm = async (e) => {
     e.preventDefault();
-    // const data = JSON.stringify({
-    //   userId: id,
-    //   doctorId: doctorId,
-    //   doctorName: doctorName,
-    //   patientName: patientName,
-    //   age: age,
-    //   gender: gender,
-    //   date: appointmentDate,
-    //   description: illness,
-    // });
+    console.log("Appointment");
     try {
       axios
         .all([
           axios.post(
             "http://localhost:5000/appointment/add",
             {
-              userId: id,
+              userId: user.id,
               doctorId: doctorId,
               doctorName: doctorName,
-              patientName: patientName,
+              patientName: user.name,
               age: age,
               gender: gender,
               date: appointmentDate,
@@ -45,10 +138,12 @@ const AppointmentModal = (props) => {
           axios.post(
             "http://localhost:5000/chat/create",
             {
-              userId: id,
-              userName: patientName,
+              userId: user.id,
+              userName: user.name,
               doctorId: doctorId,
               doctorName: doctorName,
+              date: date[selection.day],
+              slot: selection.slot,
             },
             {
               headers: { "Content-Type": "application/json" },
@@ -69,22 +164,7 @@ const AppointmentModal = (props) => {
           })
         );
 
-      // const response = await fetch("http://localhost:5000/appointment/add", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: data,
-      // });
-      // const res = await response.json();
-      // if (res.status === "ok") {
-      //   alert("Added appointment successfully");
-      // } else {
-      //   document.getElementById("alert").classList.remove("d-none");
-      //   document.getElementById("alert").innerText = res.error;
-      // }
       toggle();
-      setPatientName("");
       setAge(0);
       setGender("Select Gender");
       setIllness("");
@@ -124,9 +204,9 @@ const AppointmentModal = (props) => {
                 type="name"
                 className="form-control"
                 placeholder="Enter patient name"
+                value={user.name}
                 required
-                value={patientName}
-                onChange={(e) => setPatientName(e.target.value)}
+                disabled
               />
             </div>
             <div className="form-group">
@@ -150,12 +230,14 @@ const AppointmentModal = (props) => {
                 onChange={(e) => setGender(e.target.value)}
                 required
               >
-                <option defaultValue>Select Gender</option>
+                <option disabled defaultValue>
+                  Select Gender
+                </option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="exampleInputEmail1">Date of Appointment</label>
               <input
                 type="date"
@@ -163,7 +245,7 @@ const AppointmentModal = (props) => {
                 value={appointmentDate}
                 onChange={(e) => setAppointmentDate(e.target.value)}
               />
-            </div>
+            </div> */}
             <div className="form-group">
               <label htmlFor="exampleFormControlTextarea1">
                 Describe your illness
@@ -177,6 +259,73 @@ const AppointmentModal = (props) => {
                 required
               ></textarea>
             </div>
+            {isLoaded === false ? (
+              <div className="loading">Loading Available slots...</div>
+            ) : (
+              <div className="slots-info">
+                <div className="colour-sign">
+                  <div className="available slot sign"></div>
+                  <p>available slots</p>
+                  <div className="unavailable slot sign"></div>
+                  <p>unavailable slots</p>
+                </div>
+                <div className="day-info">
+                  <div className="date-day">
+                    {date[0]} {/* day[0]} */}
+                  </div>
+                  <div className="slots">
+                    {slots[0].map((s, index) => {
+                      if (s.isAvl) {
+                        return (
+                          <Card
+                            className="available slot"
+                            key={index}
+                            onClick={() =>
+                              setSelection({ day: 0, slot: index })
+                            }
+                          >
+                            {displayDate(s.startTime)}
+                          </Card>
+                        );
+                      }
+                      return (
+                        <div className="unavailable slot" key={index}>
+                          {displayDate(s.startTime)}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="day-info">
+                  <div className="date-day">
+                    {date[1]} {/* day[1]} */}
+                  </div>
+                  <div className="slots">
+                    {slots[1].map((s, index) => {
+                      if (s.isAvl) {
+                        return (
+                          <Card
+                            className="available slot"
+                            key={index}
+                            onClick={() => {
+                              setSelection({ day: 1, slot: index });
+                            }}
+                          >
+                            {displayDate(s.startTime)}
+                          </Card>
+                        );
+                      }
+                      return (
+                        <div className="unavailable slot" key={index}>
+                          {displayDate(s.startTime)}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
             <button type="submit" className="btn btn-success">
               Make Appointment
             </button>

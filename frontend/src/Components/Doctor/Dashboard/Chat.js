@@ -4,7 +4,7 @@ import axios from "axios";
 
 function ChatRoom({ room, chat, socket }) {
   console.log(room);
-  const id = localStorage.getItem("did");
+  const id = JSON.parse(localStorage.getItem("doctor")).id;
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -66,7 +66,7 @@ function ChatRoom({ room, chat, socket }) {
   return (
     <div className="chat-window">
       <div className="chat-header">
-        <center>Chat with  {chat.userName}</center>
+        <center>Chat with {chat.userName}</center>
       </div>
       <div className="chat-body">
         <ScrollToBottom className="message-container">

@@ -5,12 +5,10 @@ import "./Dashboard.css";
 import { FaUserCircle } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 
-var dname = localStorage.getItem("dname");
-console.log(dname);
-
 export default function DoctorDashboard() {
   const [Appointments, SetAppointments] = useState("");
-  var doctorid = localStorage.getItem("did");
+  const doctor = JSON.parse(localStorage.getItem("doctor"));
+  console.log(doctor);
 
   useEffect(() => {
     const fecthData = () => {
@@ -20,7 +18,7 @@ export default function DoctorDashboard() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          doctorid,
+          doctorid: doctor.id,
         }),
       }).then((response) =>
         response.json().then((data) => {
@@ -44,12 +42,10 @@ export default function DoctorDashboard() {
           </Nav.Item>
           <Nav.Item>
             <Nav.Link
-              href="/login"
-              onClick={(e) => {
-                localStorage.removeItem("did");
-                localStorage.removeItem("dname");
-                localStorage.removeItem("demail");
-              }}
+              href="/doctor/login"
+              // onClick={(e) => {
+              //   localStorage.removeItem("doctor");
+              // }}
             >
               Logout
             </Nav.Link>
@@ -58,7 +54,7 @@ export default function DoctorDashboard() {
             <LinkContainer to="/doctor/Profile">
               <Nav.Link href="/doctor/Profile">
                 <FaUserCircle />
-                {" Hello " + dname}
+                {" Hello " + doctor.name}
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>

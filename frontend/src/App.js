@@ -11,6 +11,7 @@ import DoctorSignin from "./Components/Doctor/Auth/Signin";
 import DoctorDashboard from "./Components/Doctor/Dashboard/Dashboard";
 import DoctorProfile from "./Components/Doctor/Dashboard/Profile";
 import DoctorChatPage from "./Components/Doctor/Dashboard/ChatPage";
+import Register from "./Components/User/Auth/Register";
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
           <Route
             path="/doctor/dashboard"
             element={
-              localStorage.getItem("did") ? (
+              localStorage.getItem("doctor") ? (
                 <DoctorDashboard />
               ) : (
                 <DoctorSignin />
@@ -54,13 +55,17 @@ function App() {
           <Route
             path="/doctor/profile"
             element={
-              localStorage.getItem("did") ? <DoctorProfile /> : <DoctorSignin />
+              localStorage.getItem("doctor") ? (
+                <DoctorProfile />
+              ) : (
+                <DoctorSignin />
+              )
             }
           />
           <Route
             path="/doctor/chats"
             element={
-              localStorage.getItem("did") ? (
+              localStorage.getItem("doctor") ? (
                 <DoctorChatPage />
               ) : (
                 <DoctorSignin />

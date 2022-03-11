@@ -1,20 +1,35 @@
-import React, { useState } from "react";
-import "./SigninUp.css";
+import React, { Component } from "react";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
+import "./SigninUp.css";
 
-const DoctorSignup = () => {
-  // const history = useHistory()
+class DoctorSignup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      email: "",
+      speciality: "",
+      description: "",
+      password: "",
+      cpassword: "",
+    };
+    this.onChange = this.onChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [speciality, setSpeciality] = useState("");
-  const [description, setDescription] = useState("");
-  const [password, setPassword] = useState("");
-  const [cpassword, setCpassword] = useState("");
+  onChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleSubmit = async (event) => {
-    // event.preventDefault();
+  async handleSubmit(e) {
+    e.preventDefault();
+    const { name, email, speciality, description, password, cpassword } =
+      this.state;
+    // console.log(name, " ", email, " ", speciality, " ", description, " ", password, " ", cpassword);
+
     try {
       if (
         !(
@@ -30,152 +45,133 @@ const DoctorSignup = () => {
         alert("Invalid input");
         return;
       }
-      console.log(name, " ", email, " ", password);
 
-      axios
-        .post(
-          "http://localhost:5000/doctor/register",
-          {
-            name: name,
-            email: email,
-            speciality: speciality,
-            description: description,
-            password: password,
+      const response = await axios.post(
+        "http://localhost:5000/doctor/register",
+        {
+          name: name,
+          email: email,
+          speciality: speciality,
+          description: description,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response.data);
-          // alert("wait");
-          if (response.data.status === "ok") {
-            // alert("User Registered Successfully!");
-            window.location = "/doctor/login";
-          } else {
-            // alert("Failed to Register the user.\n" + response.data.error);
-          }
-        });
+        }
+      );
 
-      // const response = await fetch("http://localhost:5000/doctor/register", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     name,
-      //     email,
-      //     speciality,
-      //     description,
-      //     password,
-      //   }),
-      // });
-
-      // const data = await response.json();
-
-      // if (data.status === "ok") {
-      //   alert("User registered successfully!!");
-      //   window.location = "/login";
-      // } else {
-      //   alert("Falied to create the user");
-      // }
+      if (response.status === 200) {
+        if (response.data.status === "ok") {
+          alert("Doctor Registered Successfully!");
+          window.location = "/login";
+        } else {
+          alert("Failed to Register the doctor.\n" + response.data.error);
+        }
+      } else {
+        alert("Error : ", response.status);
+      }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");
     }
-  };
+  }
 
-  return (
-    <div>
-      <Row>
-        <Col className="account1">
-          <div>
-            <form className="account-form1" onSubmit={() => handleSubmit()}>
-              <div>
-                {" "}
-                <h3>SignUP</h3>
-              </div>
-              <div>
-                Username
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="input"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div>
-                Email
-                <input
-                  type="text"
-                  placeholder="Email"
-                  className="input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                Speciality
-                <input
-                  type="text"
-                  placeholder="Speciality"
-                  className="input"
-                  value={speciality}
-                  onChange={(e) => setSpeciality(e.target.value)}
-                />
-              </div>
-              <div>
-                Description
-                <input
-                  type="text"
-                  placeholder="Description"
-                  className="input"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-              <div>
-                Password
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                Confirm Password
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="input"
-                  value={cpassword}
-                  onChange={(e) => setCpassword(e.target.value)}
-                />
-              </div>
-              <div className="d-flex justify-content-center">
-                {" "}
-                <button className="submit " type="submit">
-                  Sign Up
-                </button>
-              </div>
-
-              <div className="d-flex justify-content-center">
-                Already have an account? <a href="/doctor/login">Sign In</a>
-              </div>
-            </form>
-          </div>
-        </Col>
-        <Col className="bg">
-          <div></div>
-        </Col>
-      </Row>
-    </div>
-  );
-};
+  render() {
+    return (
+      <div>
+        <Row>
+          <Col className="account1">
+            <div>
+              <form className="account-form" onSubmit={this.handleSubmit}>
+                <div>
+                  <h3>SignUP</h3>
+                </div>
+                <div>
+                  Username
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    className="input"
+                    name="name"
+                    value={this.name}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div>
+                  Email
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    className="input"
+                    name="email"
+                    value={this.email}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div>
+                  Speciality
+                  <input
+                    type="text"
+                    placeholder="Speciality"
+                    className="input"
+                    name="speciality"
+                    value={this.speciality}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div>
+                  Description
+                  <input
+                    type="text"
+                    placeholder="Description"
+                    className="input"
+                    name="description"
+                    value={this.description}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div>
+                  Password
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    className="input"
+                    name="password"
+                    value={this.password}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div>
+                  Confirm Password
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    className="input"
+                    name="cpassword"
+                    value={this.cpassword}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div className=" d-flex justify-content-center">
+                  <button className="submit" type="submit">
+                    Sign Up
+                  </button>
+                </div>
+                <p className=" d-flex justify-content-center">
+                  Already have an account? <a href="/doctor/login">Sign In</a>
+                </p>
+              </form>
+            </div>
+          </Col>
+          <Col className="bg">
+            <div></div>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+}
 
 export default DoctorSignup;

@@ -52,9 +52,7 @@ export const loginDoctor = async (req, res) => {
     console.log("ok");
     return res.json({
       status: "ok",
-      id: doctor._id,
-      name: doctor.name,
-      email: doctor.email,
+      doctor: doctor,
     });
   } else {
     return res.json({ status: "error", error: "Invalid Password" });

@@ -8,7 +8,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 
 const DoctorProfile = () => {
-  var dname = localStorage.getItem("dname");
+  var doctor = JSON.parse(localStorage.getItem("doctor"));
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [speciality, setSpeciality] = useState("");
@@ -74,9 +74,7 @@ const DoctorProfile = () => {
             <Nav.Link
               href="/doctor/login"
               onClick={(e) => {
-                localStorage.removeItem("did");
-                localStorage.removeItem("dname");
-                localStorage.removeItem("demail");
+                localStorage.removeItem("doctor");
               }}
             >
               Logout
@@ -86,7 +84,7 @@ const DoctorProfile = () => {
             <LinkContainer to="/doctor/profile">
               <Nav.Link to="/doctor/profile">
                 <FaUserCircle />
-                {" Hello " + dname}
+                {" Hello " + doctor.name}
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>
@@ -106,7 +104,7 @@ const DoctorProfile = () => {
                   type="text"
                   placeholder="Username"
                   className="input"
-                  value={name}
+                  value={doctor.name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
@@ -116,7 +114,7 @@ const DoctorProfile = () => {
                   type="text"
                   placeholder="Email"
                   className="input"
-                  value={email}
+                  value={doctor.email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -126,7 +124,7 @@ const DoctorProfile = () => {
                   type="text"
                   placeholder="Speciality"
                   className="input"
-                  value={speciality}
+                  value={doctor.speciality}
                   onChange={(e) => setSpeciality(e.target.value)}
                 />
               </div>
@@ -136,7 +134,7 @@ const DoctorProfile = () => {
                   type="text"
                   placeholder="Description"
                   className="input"
-                  value={description}
+                  value={doctor.description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>

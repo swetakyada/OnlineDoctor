@@ -37,7 +37,7 @@ export const GetAppointments = async (req, res) => {
 };
 
 export const GetDoctorAppointments = async (req, res) => {
-  console.log("Get Doctor Appointments");
+  console.log("Get Doctor Appointments", req.body.doctorid);
   Appointment.find({ doctor: req.body.doctorid })
     .then((appointments) => {
       console.log(appointments);

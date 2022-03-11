@@ -1,0 +1,59 @@
+.loading {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 20px;
+}
+
+.slots-info {
+  width: 95%;
+}
+
+.colour-sign {
+  margin-left: 20px;
+  display: flex;
+}
+
+.colour-sign p {
+  margin: 10px 30px 10px 5px;
+}
+
+.day-info {
+  margin: 30px;
+}
+
+.date-day {
+  background-color: rgb(223, 219, 219);
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+}
+
+.slots {
+  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.available {
+  background-color: blanchedalmond;
+  cursor: pointer;
+}
+
+.unavailable {
+  background-color: grey;
+}
+
+.slot {
+  padding: 10px 15px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  color: black;
+  text-decoration: none;
+}
+
+.sign {
+  height: 25px;
+}

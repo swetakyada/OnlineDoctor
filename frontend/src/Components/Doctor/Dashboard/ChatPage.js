@@ -13,14 +13,13 @@ const DoctorChatPage = () => {
   const socket = useRef();
   const [Chats, SetChats] = useState("");
   const [Chat, SetChat] = useState("");
-  const id = localStorage.getItem("did");
-  const username = localStorage.getItem("dname");
+  const doctor = JSON.parse(localStorage.getItem("doctor"));
   const [room, SetRoom] = useState("");
 
   useEffect(() => {
-    if (id) {
+    if (doctor.id) {
       socket.current = io("http://localhost:5000");
-      socket.current.emit("add-user", id);
+      socket.current.emit("add-user", doctor.id);
     }
   }, []);
 
@@ -46,7 +45,7 @@ const DoctorChatPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: id,
+          id: doctor.id,
         }),
       }).then((response) =>
         response.json().then((data) => {
@@ -69,11 +68,9 @@ const DoctorChatPage = () => {
           </Nav.Item>
           <Nav.Item>
             <Nav.Link
-              href="/login"
+              href="/doctor/login"
               onClick={(e) => {
-                localStorage.removeItem("did");
-                localStorage.removeItem("dname");
-                localStorage.removeItem("demail");
+                localStorage.removeItem("doctor");
               }}
             >
               Logout
@@ -83,7 +80,7 @@ const DoctorChatPage = () => {
             <LinkContainer to="/doctor/Profile">
               <Nav.Link href="/doctor/Profile">
                 <FaUserCircle />
-                {" Hello " + username}
+                {"Hello " + doctor.name}
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>
@@ -99,17 +96,13 @@ const DoctorChatPage = () => {
                   .filter((key) => key)
                   .map((key, index) => {
                     return (
-
                       <div
                         onClick={() => {
                           handleClick(Chats[key]._id);
                         }}
                       >
                         Patient Name : {Chats[key].userName}
-
                       </div>
-
-
                     );
                   })}
               </div>
