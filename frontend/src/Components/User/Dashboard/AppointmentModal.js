@@ -128,7 +128,7 @@ const AppointmentModal = (props) => {
               patientName: user.name,
               age: age,
               gender: gender,
-              date: appointmentDate,
+              date: date[selection.day],
               description: illness,
             },
             {
