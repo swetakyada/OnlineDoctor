@@ -6,6 +6,7 @@ import doc from "../../../Assets/doc.png";
 import "./Doclist.css";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import AppointmentModal from "./AppointmentModal";
+import axios from "axios";
 
 const Search = () => {
   const [SearchDoctor, SetSearchDoctor] = useState("");

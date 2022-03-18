@@ -9,6 +9,30 @@ function ChatRoom({ room, chat, socket }) {
   const [messageList, setMessageList] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [click, SetClick] = useState(false);
+  const [disable, setDisable] = useState(true);
+
+  const ddMmYyyy = (today) => {
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1;
+    let yyyy = today.getFullYear();
+    let ans = "";
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    ans = dd + "-" + mm + "-" + yyyy;
+    return ans;
+  };
+
+  const getCurrentTime = () => {
+    let current = new Date();
+    let current_time = current.toLocaleTimeString("it-IT", {
+      hour: "numeric",
+    });
+    return current_time;
+  };
 
   useEffect(async () => {
     console.log("Called!!!");
@@ -19,6 +43,12 @@ function ChatRoom({ room, chat, socket }) {
       }
     );
     setMessageList(response.data.messages);
+    let current = new Date();
+    let date = ddMmYyyy(current);
+    if (date === chat.date) {
+      let slot = getCurrentTime() - 13;
+      if (slot === chat.slot) setDisable(false);
+    }
   }, [room, click]);
 
   const sendMessage = async () => {
@@ -43,6 +73,8 @@ function ChatRoom({ room, chat, socket }) {
         { content: currentMessage, isDoctor: false, time: Date.now() },
       ]);
     }
+    let slot = getCurrentTime() - 13;
+    if (slot !== chat.slot) setDisable(false);
   };
 
   useEffect(() => {
@@ -109,13 +141,15 @@ function ChatRoom({ room, chat, socket }) {
             setCurrentMessage(event.target.value);
           }}
           onKeyPress={(event) => {
-            event.key === "Enter" && sendMessage();
+            if (!disable) event.key === "Enter" && sendMessage();
           }}
         />
-        <button onClick={sendMessage}>&#9658;</button>
-        <button onClick={() => SetClick(!click)}>
-          <h5>Refresh</h5>
+        <button onClick={sendMessage} disabled={disable}>
+          &#9658;
         </button>
+        {/* <button onClick={() => SetClick(!click)}>
+          <h5>Refresh</h5>
+        </button> */}
       </div>
     </div>
   );

@@ -15,11 +15,11 @@ const AppointmentModal = (props) => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("Select Gender");
   const [illness, setIllness] = useState("");
-  const [appointmentDate, setAppointmentDate] = useState("");
   const [slots, setSlots] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [date, setDate] = useState([]);
-  const [selection, setSelection] = useState("");
+  const [selection, setSelection] = useState(0);
+  const [canBook, setCanBook] = useState(true);
   const user = JSON.parse(localStorage.getItem("user"));
 
   const ddMmYyyy = (today) => {
@@ -50,10 +50,39 @@ const AppointmentModal = (props) => {
     return display_time;
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     let dt = ["", ""];
     let current = new Date();
     dt[0] = ddMmYyyy(current);
+
+    try {
+      await axios
+        .post(
+          "http://localhost:5000/chat/udget",
+          {
+            userId: user.id,
+            doctorId: doctorId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data.status === "ok") {
+            if (dt[0] <= response.data.chat.date) {
+              alert(
+                "You have already booked an appointment with " + doctorName
+              );
+              toggle();
+            }
+          }
+        });
+    } catch (err) {
+      alert("Some error occured!");
+    }
+
     let next = new Date();
     next.setDate(current.getDate() + 1);
     dt[1] = ddMmYyyy(next);
@@ -62,16 +91,16 @@ const AppointmentModal = (props) => {
     let promises = [];
     let slots = [
       [
-        { startTime: 1, isAvl: false },
-        { startTime: 2, isAvl: false },
-        { startTime: 3, isAvl: false },
-        { startTime: 4, isAvl: false },
+        { startTime: 13, isAvl: false },
+        { startTime: 14, isAvl: false },
+        { startTime: 15, isAvl: false },
+        { startTime: 16, isAvl: false },
       ],
       [
-        { startTime: 1, isAvl: false },
-        { startTime: 2, isAvl: false },
-        { startTime: 3, isAvl: false },
-        { startTime: 4, isAvl: false },
+        { startTime: 13, isAvl: false },
+        { startTime: 14, isAvl: false },
+        { startTime: 15, isAvl: false },
+        { startTime: 16, isAvl: false },
       ],
     ];
 
@@ -79,7 +108,7 @@ const AppointmentModal = (props) => {
       for (let s = 0; s < 4; s++) {
         if (
           1 === d ||
-          new Date().getDay() === 0 ||
+          // new Date().getDay() === 0 ||
           getCurrentTime() < slots[d][s].startTime
         ) {
           promises.push(
@@ -168,7 +197,6 @@ const AppointmentModal = (props) => {
       setAge(0);
       setGender("Select Gender");
       setIllness("");
-      setAppointmentDate("");
     } catch (error) {
       console.log(error);
       document.getElementById("alert").classList.remove("d-none");
@@ -237,15 +265,6 @@ const AppointmentModal = (props) => {
                 <option value="Female">Female</option>
               </select>
             </div>
-            {/* <div className="form-group">
-              <label htmlFor="exampleInputEmail1">Date of Appointment</label>
-              <input
-                type="date"
-                className="form-control"
-                value={appointmentDate}
-                onChange={(e) => setAppointmentDate(e.target.value)}
-              />
-            </div> */}
             <div className="form-group">
               <label htmlFor="exampleFormControlTextarea1">
                 Describe your illness
@@ -277,15 +296,26 @@ const AppointmentModal = (props) => {
                     {slots[0].map((s, index) => {
                       if (s.isAvl) {
                         return (
-                          <Card
-                            className="available slot"
-                            key={index}
-                            onClick={() =>
-                              setSelection({ day: 0, slot: index })
-                            }
-                          >
-                            {displayDate(s.startTime)}
-                          </Card>
+                          <label>
+                            <input
+                              type="radio"
+                              name="product"
+                              class="card-input-element"
+                            />
+                            <div class="card-input">
+                              <div class="panel-body">
+                                <Card
+                                  className="available slot"
+                                  key={index}
+                                  onClick={() =>
+                                    setSelection({ day: 0, slot: index })
+                                  }
+                                >
+                                  {displayDate(s.startTime)}
+                                </Card>
+                              </div>
+                            </div>
+                          </label>
                         );
                       }
                       return (
@@ -305,15 +335,26 @@ const AppointmentModal = (props) => {
                     {slots[1].map((s, index) => {
                       if (s.isAvl) {
                         return (
-                          <Card
-                            className="available slot"
-                            key={index}
-                            onClick={() => {
-                              setSelection({ day: 1, slot: index });
-                            }}
-                          >
-                            {displayDate(s.startTime)}
-                          </Card>
+                          <label>
+                            <input
+                              type="radio"
+                              name="product"
+                              class="card-input-element"
+                            />
+                            <div class="card-input">
+                              <div class="panel-body">
+                                <Card
+                                  className="available slot"
+                                  key={index}
+                                  onClick={() =>
+                                    setSelection({ day: 1, slot: index })
+                                  }
+                                >
+                                  {displayDate(s.startTime)}
+                                </Card>
+                              </div>
+                            </div>
+                          </label>
                         );
                       }
                       return (

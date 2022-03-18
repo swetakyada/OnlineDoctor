@@ -3,13 +3,13 @@ import Chat from "../models/chat.js";
 export const createChat = async (req, res) => {
   console.log("create Chat");
   try {
-    var chat = await Chat.findOne({
+    var count = await Chat.countDocuments({
       user: req.body.userId,
       doctor: req.body.doctorId,
     });
 
-    if (!chat) {
-      chat = new Chat({
+    if (count == 0) {
+      var chat = new Chat({
         user: req.body.userId,
         doctor: req.body.doctorId,
         userName: req.body.userName,
@@ -18,25 +18,41 @@ export const createChat = async (req, res) => {
         slot: req.body.slot,
       });
       await chat.save();
+      return res.json({ status: "ok", chat: chat });
     } else {
-      Chat.updateOne(
-        { _id: chat._id },
+      console.log("Updating chat...");
+      var chat = await Chat.findOneAndUpdate(
         {
-          $set: { date: req.body.date },
-          $set: { slot: req.body.slot },
+          user: req.body.userId,
+          doctor: req.body.doctorId,
         },
-        function (err, item) {
-          if (err) {
-            return res.json({ status: "error", error: "Not Updated!" });
-          }
-          return res.json({ status: "ok", chat: item });
+        {
+          date: req.body.date,
+          slot: req.body.slot,
+        },
+        {
+          new: true,
         }
+        // function (er, item) {
+        //   if (er) {
+        //     console.log(er);
+        //     return res.json({ status: "error", error: "Not Updated!" });
+        //   }
+        //   console.log(item);
+        //   return res.json({ status: "ok", chat: item });
+        // }
       );
+      console.log(chat);
+      if (!chat) {
+        console.log("Error in updating chat");
+        return res.json({ status: "error", error: "Not Updated!" });
+      }
+      console.log("Chat updated!");
+      return res.json({ status: "ok", chat: chat });
     }
-    res.json({ status: "ok", chat: chat });
-  } catch (err) {
-    console.log(err);
-    res.json({ status: "error", error: err });
+  } catch (er) {
+    console.log("Error in create chat : ", er);
+    return res.json({ status: "error", error: er });
   }
 };
 
@@ -47,6 +63,28 @@ export const getChat = async (req, res) => {
       _id: req.body.id,
     });
     res.json({ status: "ok", chat: chat });
+  } catch (err) {
+    res.json({ status: "error", error: err });
+  }
+};
+
+export const getUserDoctorChat = async (req, res) => {
+  console.log("Get user doctor chat");
+  try {
+    var count = await Chat.countDocuments({
+      user: req.body.userId,
+      doctor: req.body.doctorId,
+    });
+
+    if (count == 0) {
+      return res.json({ status: "not" });
+    } else {
+      const chat = await Chat.findOne({
+        user: req.body.userId,
+        doctor: req.body.doctorId,
+      });
+      res.json({ status: "ok", chat: chat });
+    }
   } catch (err) {
     res.json({ status: "error", error: err });
   }

@@ -21,7 +21,7 @@ export const AddAppointment = async (req, res) => {
       )
     )
     .catch((err) => {
-      console.log(err);
+      console.log("Error in Add appointment : ", err);
       res.json({ status: "error", error: "Error adding appointment" });
     });
 };
@@ -30,18 +30,24 @@ export const GetAppointments = async (req, res) => {
   console.log("Get Appointments");
   Appointment.find({ user: req.body.id })
     .then((appointments) => {
-      console.log(appointments);
+      // console.log(appointments);
       res.json(appointments);
     })
-    .catch((err) => res.json({ error: "Error fetching appointments" }));
+    .catch((err) => {
+      console.log("Error in get user appointments : ", err);
+      res.json({ error: "Error fetching appointments" });
+    });
 };
 
 export const GetDoctorAppointments = async (req, res) => {
   console.log("Get Doctor Appointments", req.body.doctorid);
   Appointment.find({ doctor: req.body.doctorid })
     .then((appointments) => {
-      console.log(appointments);
+      // console.log(appointments);
       res.json(appointments);
     })
-    .catch((err) => res.json({ error: "Error fetching appointments" }));
+    .catch((err) => {
+      console.log("Error in get doctor appointments : ", err);
+      res.json({ error: "Error fetching appointments" });
+    });
 };

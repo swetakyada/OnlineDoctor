@@ -4,8 +4,10 @@
   margin: 20px;
 }
 
+/* radio button card for slots */
+
 .slots-info {
-  width: 95%;
+  width: 100%;
 }
 
 .colour-sign {
@@ -45,8 +47,9 @@
 }
 
 .slot {
-  padding: 10px 15px;
-  margin: 10px;
+  display: inline;
+  padding: 3px 4px;
+  margin: 5px;
   border: none;
   border-radius: 5px;
   font-size: 18px;
@@ -56,4 +59,33 @@
 
 .sign {
   height: 25px;
+  width: 30px;
 }
+
+/* label {
+  width: 30%;
+} */
+
+.card-input-element {
+  display: none;
+}
+
+.card-input {
+  background-color: antiquewhite;
+  margin: 10px;
+  padding: 00px;
+}
+
+.card-input:hover {
+  display: flex;
+  flex-wrap: wrap;
+  cursor: pointer;
+}
+
+.card-input-element:checked + .card-input {
+  box-shadow: 0 0 1px 1px #000000;
+}
+
+/* .slot:checked+.card-input {
+  box-shadow: 0 0 1px 1px #2ecc71;
+} */

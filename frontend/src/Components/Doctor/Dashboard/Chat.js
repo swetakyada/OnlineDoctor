@@ -108,9 +108,9 @@ function ChatRoom({ room, chat, socket }) {
           }}
         />
         <button onClick={sendMessage}>&#9658;</button>
-        <button onClick={() => SetClick(!click)}>
+        {/* <button onClick={() => SetClick(!click)}>
           <h5>Refresh</h5>
-        </button>
+        </button> */}
       </div>
     </div>
   );

@@ -52,8 +52,7 @@ const AppointmentPage = () => {
                         <br />
                         Date : {Appointments[key].date}
                       </Card.Text>
-                      <center>
-                        {" "}
+                      {/* <center>
                         <Button
                           style={{
                             backgroundColor: "#064420",
@@ -67,7 +66,7 @@ const AppointmentPage = () => {
                         >
                           Start Now
                         </Button>
-                      </center>
+                      </center> */}
                     </Card.Body>
                   </Card>
                   <br />

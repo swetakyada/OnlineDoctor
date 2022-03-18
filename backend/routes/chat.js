@@ -6,6 +6,7 @@ import {
   getDoctorChats,
   getMessages,
   getUserChats,
+  getUserDoctorChat,
   isSlotAvailable,
 } from "../controllers/chat.js";
 
@@ -18,5 +19,6 @@ router.post("/dget", getDoctorChats);
 router.post("/add_message", addMessage);
 router.post("/get_messages", getMessages);
 router.post("/is_available", isSlotAvailable);
+router.post("/udget", getUserDoctorChat);
 
 export default router;
