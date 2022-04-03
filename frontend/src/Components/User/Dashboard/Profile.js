@@ -5,20 +5,13 @@ import Navbar from "../Dashboard/Navbar";
 import axios from "axios";
 
 const Profile = () => {
-  const id = JSON.parse(localStorage.getItem("user")).id;
-  const [name, setName] = useState(
-    JSON.parse(localStorage.getItem("user")).name
-  );
-  const [email, setEmail] = useState(
-    JSON.parse(localStorage.getItem("user")).email
-  );
-  const [opassword, setOpassword] = useState("");
-  const [password, setPassword] = useState("");
-  const [cpassword, setCpassword] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const id = user.id;
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
   const [update, setUpdate] = useState(false);
 
   useEffect(() => {
-    setUpdate(false);
     console.log(email);
     localStorage.setItem(
       "user",
@@ -32,10 +25,7 @@ const Profile = () => {
 
   const handleSubmit = async (event) => {
     try {
-      if (
-        name !== JSON.parse(localStorage.getItem("user")).name ||
-        email !== JSON.parse(localStorage.getItem("user")).email
-      ) {
+      if (name && email) {
         console.log(name, " ", email);
         axios
           .post(
@@ -50,43 +40,12 @@ const Profile = () => {
           .then((response) => {
             console.log(response.data);
             if (response.data.status === "ok") {
-              setUpdate(true);
+              setUpdate(!update);
               alert("Information Updated!!");
             } else {
               alert(response.data.error);
             }
           });
-      }
-
-      if (opassword || password || cpassword) {
-        if (opassword && password && cpassword) {
-          if (password === cpassword) {
-            axios
-              .post(
-                "http://localhost:5000/user/change",
-                { id: id, opassword: opassword, password: cpassword },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                }
-              )
-              .then((response) => {
-                console.log(response.data);
-                if (response.data.status === "ok") {
-                  alert("Password Changed!!");
-                } else {
-                  alert(response.data.error);
-                }
-              });
-          } else {
-            alert("password and confirm password does not match");
-          }
-        } else {
-          alert("All password fields are required");
-        }
-      } else {
-        alert("No change in Password");
       }
     } catch (error) {
       console.log(error);
@@ -102,7 +61,6 @@ const Profile = () => {
           <div>
             <form className="account-form" onSubmit={() => handleSubmit()}>
               <div>
-                {" "}
                 <h3>Profile</h3>
               </div>
               <div>
@@ -123,36 +81,6 @@ const Profile = () => {
                   className="input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                Old Password
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="input"
-                  value={opassword}
-                  onChange={(e) => setOpassword(e.target.value)}
-                />
-              </div>
-              <div>
-                New Password
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                Confirm New Password
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="input"
-                  value={cpassword}
-                  onChange={(e) => setCpassword(e.target.value)}
                 />
               </div>
               <div className=" d-flex justify-content-center">

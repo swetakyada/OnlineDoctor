@@ -5,13 +5,13 @@ import Dashboard from "./Components/User/Dashboard/Dashboard.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Appointment from "./Components/User/Dashboard/Appointment";
 import Chat from "./Components/User/Dashboard/Chat";
-import UpdateProfile from "./Components/User/Dashboard/Profile";
+import Profile from "./Components/User/Dashboard/Profile";
 import DoctorSignup from "./Components/Doctor/Auth/Signup";
 import DoctorSignin from "./Components/Doctor/Auth/Signin";
 import DoctorDashboard from "./Components/Doctor/Dashboard/Dashboard";
 import DoctorProfile from "./Components/Doctor/Dashboard/Profile";
 import DoctorChatPage from "./Components/Doctor/Dashboard/ChatPage";
-import Register from "./Components/User/Auth/Register";
+import ChangePassword from "./Components/User/Dashboard/ChangePassword";
 
 function App() {
   return (
@@ -36,8 +36,12 @@ function App() {
           />
           <Route
             path="/profile"
+            element={localStorage.getItem("user") ? <Profile /> : <Signin />}
+          />
+          <Route
+            path="/changePassword"
             element={
-              localStorage.getItem("user") ? <UpdateProfile /> : <Signin />
+              localStorage.getItem("user") ? <ChangePassword /> : <Signin />
             }
           />
           <Route exact path="/doctor" element={<DoctorSignup />} />

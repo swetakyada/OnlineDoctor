@@ -12,18 +12,7 @@ function ChatRoom({ room, chat, socket }) {
   const [disable, setDisable] = useState(true);
 
   const ddMmYyyy = (today) => {
-    let dd = today.getDate();
-    let mm = today.getMonth() + 1;
-    let yyyy = today.getFullYear();
-    let ans = "";
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    ans = dd + "-" + mm + "-" + yyyy;
-    return ans;
+    return today.toLocaleDateString(["ban", "id"], { dateStyle: "short" });
   };
 
   const getCurrentTime = () => {
@@ -32,6 +21,13 @@ function ChatRoom({ room, chat, socket }) {
       hour: "numeric",
     });
     return current_time;
+  };
+
+  const getDateTime = () => {
+    let current = new Date();
+    let date = current.toLocaleDateString("en-Us", { dateStyle: "medium" });
+    let time = current.toLocaleTimeString("en-US", { timeStyle: "short" });
+    return date + " " + time;
   };
 
   useEffect(async () => {
@@ -63,6 +59,7 @@ function ChatRoom({ room, chat, socket }) {
         id: room,
         content: currentMessage,
         isDoctor: false,
+        time: getDateTime(),
       });
       setCurrentMessage("");
       // const msgs = [...messageList];
@@ -70,7 +67,7 @@ function ChatRoom({ room, chat, socket }) {
       // setMessageList(msgs);
       setMessageList((msgs) => [
         ...msgs,
-        { content: currentMessage, isDoctor: false, time: Date.now() },
+        { content: currentMessage, isDoctor: false, time: getDateTime() },
       ]);
     }
     let slot = getCurrentTime() - 13;
@@ -84,7 +81,7 @@ function ChatRoom({ room, chat, socket }) {
         setArrivalMessage({
           content: currentMessage,
           isDoctor: true,
-          time: Date.now(),
+          time: getDateTime(),
         });
       });
     }

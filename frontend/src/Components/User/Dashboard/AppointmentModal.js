@@ -23,18 +23,7 @@ const AppointmentModal = (props) => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const ddMmYyyy = (today) => {
-    let dd = today.getDate();
-    let mm = today.getMonth() + 1;
-    let yyyy = today.getFullYear();
-    let ans = "";
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    ans = dd + "-" + mm + "-" + yyyy;
-    return ans;
+    return today.toLocaleDateString(["ban", "id"], { dateStyle: "short" });
   };
 
   const getCurrentTime = () => {

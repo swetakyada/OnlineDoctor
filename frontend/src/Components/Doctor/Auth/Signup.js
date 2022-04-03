@@ -65,7 +65,7 @@ class DoctorSignup extends Component {
       if (response.status === 200) {
         if (response.data.status === "ok") {
           alert("Doctor Registered Successfully!");
-          window.location = "/login";
+          window.location = "/doctor/login";
         } else {
           alert("Failed to Register the doctor.\n" + response.data.error);
         }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { Row, Col } from "react-bootstrap";
 import { Navbar, Container, Card, Button, Nav } from "react-bootstrap";
@@ -6,53 +6,58 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Dashboard.css";
 import { FaUserCircle } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
+import axios from "axios";
 
 const DoctorProfile = () => {
   var doctor = JSON.parse(localStorage.getItem("doctor"));
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [speciality, setSpeciality] = useState("");
-  const [description, setDescription] = useState("");
-  const [password, setPassword] = useState("");
-  const [cpassword, setCpassword] = useState("");
+  const id = doctor.id;
+  const [name, setName] = useState(doctor.name);
+  const [email, setEmail] = useState(doctor.email);
+  const [speciality, setSpeciality] = useState(doctor.speciality);
+  const [description, setDescription] = useState(doctor.description);
+  const [update, setUpdate] = useState(false);
+
+  useEffect(() => {
+    console.log(email);
+    localStorage.setItem(
+      "doctor",
+      JSON.stringify({
+        id: id,
+        name: name,
+        email: email,
+        speciality: speciality,
+        description: description,
+      })
+    );
+  }, [update]);
 
   const handleSubmit = async (event) => {
     try {
-      if (
-        !(
-          name &&
-          email &&
-          speciality &&
-          description &&
-          password &&
-          cpassword &&
-          password === cpassword
-        )
-      ) {
-        alert("Invalid input");
-        return;
-      }
-      console.log(name, " ", email, " ", password);
-      const response = await fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          speciality,
-          description,
-          password,
-        }),
-      });
+      if (name && email && speciality && description) {
+        // console.log(name, " ", email);
+        const response = await axios.post(
+          "http://localhost:5000/doctor/edit",
+          {
+            id: id,
+            name: name,
+            email: email,
+            speciality: speciality,
+            description: description,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      const data = await response.json();
-
-      if (data.status === "ok") {
-        alert("User registered successfully!!");
-      } else {
-        alert("Falied to create the user");
+        // console.log(response.data);
+        if (response.data.status === "ok") {
+          setUpdate(!update);
+          alert("Information Updated!!");
+        } else {
+          alert(response.data.error);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -93,83 +98,56 @@ const DoctorProfile = () => {
       <Row>
         <Col className="account1">
           <div>
+            <br />
             <form className="account-form1" onSubmit={() => handleSubmit()}>
               <div>
-                {" "}
                 <h3>Profile</h3>
               </div>
+              <br />
               <div>
                 Username
                 <input
                   type="text"
                   placeholder="Username"
                   className="input"
-                  value={doctor.name}
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
+              <br />
               <div>
                 Email
                 <input
                   type="text"
                   placeholder="Email"
                   className="input"
-                  value={doctor.email}
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+              <br />
               <div>
                 Speciality
                 <input
                   type="text"
                   placeholder="Speciality"
                   className="input"
-                  value={doctor.speciality}
+                  value={speciality}
                   onChange={(e) => setSpeciality(e.target.value)}
                 />
               </div>
+              <br />
               <div>
                 Description
                 <input
                   type="text"
                   placeholder="Description"
                   className="input"
-                  value={doctor.description}
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-              <div>
-                Old Password
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                New Password
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                Confirm New Password
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="input"
-                  value={cpassword}
-                  onChange={(e) => setCpassword(e.target.value)}
-                />
-              </div>
               <div className="d-flex justify-content-center">
-                {" "}
                 <button className="submit " type="submit">
                   Save
                 </button>
@@ -177,11 +155,6 @@ const DoctorProfile = () => {
             </form>
           </div>
         </Col>
-        {/* <Col className="bg">
-                    <div>
-
-                    </div>
-                </Col> */}
       </Row>
     </div>
   );

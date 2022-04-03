@@ -9,6 +9,26 @@ function ChatRoom({ room, chat, socket }) {
   const [messageList, setMessageList] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [click, SetClick] = useState(false);
+  const [disable, setDisable] = useState(true);
+
+  const ddMmYyyy = (today) => {
+    return today.toLocaleDateString(["ban", "id"], { dateStyle: "short" });
+  };
+
+  const getCurrentTime = () => {
+    let current = new Date();
+    let current_time = current.toLocaleTimeString("it-IT", {
+      hour: "numeric",
+    });
+    return current_time;
+  };
+
+  const getDateTime = () => {
+    let current = new Date();
+    let date = current.toLocaleDateString("en-Us", { dateStyle: "medium" });
+    let time = current.toLocaleTimeString("en-US", { timeStyle: "short" });
+    return date + " " + time;
+  };
 
   useEffect(async () => {
     console.log("Called!!!");
@@ -19,6 +39,12 @@ function ChatRoom({ room, chat, socket }) {
       }
     );
     setMessageList(response.data.messages);
+    let current = new Date();
+    let date = ddMmYyyy(current);
+    if (date === chat.date) {
+      let slot = getCurrentTime() - 13;
+      if (slot === chat.slot) setDisable(false);
+    }
   }, [room, click]);
 
   const sendMessage = async () => {
@@ -33,13 +59,16 @@ function ChatRoom({ room, chat, socket }) {
         id: room,
         content: currentMessage,
         isDoctor: true,
+        time: getDateTime(),
       });
       setCurrentMessage("");
       setMessageList((msgs) => [
         ...msgs,
-        { content: currentMessage, isDoctor: true, time: Date.now() },
+        { content: currentMessage, isDoctor: true, time: getDateTime() },
       ]);
     }
+    let slot = getCurrentTime() - 13;
+    if (slot !== chat.slot) setDisable(false);
   };
 
   useEffect(() => {
@@ -49,7 +78,7 @@ function ChatRoom({ room, chat, socket }) {
         setArrivalMessage({
           content: currentMessage,
           isDoctor: false,
-          time: Date.now(),
+          time: getDateTime(),
         });
       });
     }
@@ -107,7 +136,9 @@ function ChatRoom({ room, chat, socket }) {
             event.key === "Enter" && sendMessage();
           }}
         />
-        <button onClick={sendMessage}>&#9658;</button>
+        <button onClick={sendMessage} disabled={disable}>
+          &#9658;
+        </button>
         {/* <button onClick={() => SetClick(!click)}>
           <h5>Refresh</h5>
         </button> */}

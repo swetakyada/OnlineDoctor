@@ -23,7 +23,7 @@ const chatSchema = mongoose.Schema({
     {
       content: { type: String },
       isDoctor: { type: Boolean },
-      time: { type: Date, default: Date.now },
+      time: { type: String },
     },
   ],
   date: {

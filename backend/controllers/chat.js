@@ -127,7 +127,7 @@ export const addMessage = async (req, res) => {
     chat.messages.push({
       content: req.body.content,
       isDoctor: req.body.isDoctor,
-      time: Date.now(),
+      time: req.body.time,
     });
     await chat.save();
     res.json({ status: "ok" });
