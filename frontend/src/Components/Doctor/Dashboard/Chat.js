@@ -9,7 +9,7 @@ function ChatRoom({ room, chat, socket }) {
   const [messageList, setMessageList] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [click, SetClick] = useState(false);
-  const [disable, setDisable] = useState(true);
+  const [disable, setDisable] = useState(false);
 
   const ddMmYyyy = (today) => {
     return today.toLocaleDateString(["ban", "id"], { dateStyle: "short" });

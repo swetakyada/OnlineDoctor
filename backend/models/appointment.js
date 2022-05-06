@@ -31,6 +31,12 @@ const appointmentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  slot: {
+    type: Number,
+    required: true,
+    min: [0, "invalid slot"],
+    max: [3, "invalid slot"],
+  },
   description: {
     type: String,
     required: true,

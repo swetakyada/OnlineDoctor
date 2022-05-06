@@ -7,6 +7,7 @@ const AppointmentPage = () => {
   const [Appointments, SetAppointments] = useState("");
   const [doctorId, SetDoctorId] = useState("");
   const id = JSON.parse(localStorage.getItem("user")).id;
+  const slots = ["1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
 
   useEffect(() => {
     const fecthData = () => {
@@ -51,6 +52,8 @@ const AppointmentPage = () => {
                         Health issue : {Appointments[key].description}
                         <br />
                         Date : {Appointments[key].date}
+                        <br />
+                        Time : {slots[Appointments[key].slot]}
                       </Card.Text>
                       {/* <center>
                         <Button

@@ -10,6 +10,7 @@ export const AddAppointment = async (req, res) => {
     age: req.body.age,
     gender: req.body.gender,
     date: req.body.date,
+    slot: req.body.slot,
     description: req.body.description,
   });
 

@@ -87,6 +87,7 @@ class DoctorSignup extends Component {
               <form className="account-form" onSubmit={this.handleSubmit}>
                 <div>
                   <h3>SignUP</h3>
+                  <h6>For Doctors</h6>
                 </div>
                 <div>
                   Username

@@ -8,7 +8,7 @@ import { LinkContainer } from "react-router-bootstrap";
 export default function DoctorDashboard() {
   const [Appointments, SetAppointments] = useState("");
   const doctor = JSON.parse(localStorage.getItem("doctor"));
-  console.log(doctor);
+  const slots = ["1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
 
   useEffect(() => {
     const fecthData = () => {
@@ -81,9 +81,11 @@ export default function DoctorDashboard() {
                         <Card.Text>
                           Illness : {Appointments[key].description}
                           <br />
-                          Date: {Appointments[key].date}
+                          Date : {Appointments[key].date}
+                          <br />
+                          Time : {slots[Appointments[key].slot]}
                         </Card.Text>
-                        <center>
+                        {/* <center>
                           <Button
                             style={{
                               backgroundColor: "#064420",
@@ -93,7 +95,7 @@ export default function DoctorDashboard() {
                           >
                             Start Now
                           </Button>
-                        </center>
+                        </center> */}
                       </Card.Body>
                     </Card>
                     <br />
