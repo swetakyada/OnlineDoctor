@@ -45,14 +45,11 @@ export const loginUser = async (req, res) => {
 
 export const editUser = async (req, res) => {
   try {
-    var user = await User.findOneAndUpdate(
+    var user = await User.updateOne(
       { _id: req.body.id },
       {
         name: req.body.name,
         email: req.body.email,
-      },
-      {
-        new: true,
       }
     );
     if (!user) {

@@ -61,16 +61,13 @@ export const loginDoctor = async (req, res) => {
 
 export const editDoctor = async (req, res) => {
   try {
-    var doctor = await Doctor.findOneAndUpdate(
+    var doctor = await Doctor.updateOne(
       { _id: req.body.id },
       {
         name: req.body.name,
         email: req.body.email,
         speciality: req.body.speciality,
         description: req.body.description,
-      },
-      {
-        new: true,
       }
     );
     if (!doctor) {

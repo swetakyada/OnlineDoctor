@@ -1,36 +1,43 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col } from "react-bootstrap";
+import React, { Component, useState, useEffect } from "react";
+import { Row, Col, Navbar, Container, Nav } from "react-bootstrap";
 import "./Profile.css";
-import Navbar from "../Dashboard/Navbar";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./Dashboard.css";
+import { FaUserCircle } from "react-icons/fa";
+import { LinkContainer } from "react-router-bootstrap";
 
-const Profile = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const id = user.id;
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [update, setUpdate] = useState(false);
+class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.id = this.props.user.id;
+    this.state = {
+      name: "",
+      email: "",
+    }
+    this.store = this.store.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-  useEffect(() => {
-    console.log(email);
+  store() {
     localStorage.setItem(
       "user",
       JSON.stringify({
-        id: id,
-        name: name,
-        email: email,
+        id: this.id,
+        name: this.name,
+        email: this.email,
       })
     );
-  }, [update]);
+  }
 
-  const handleSubmit = async (event) => {
+  async handleSubmit(e) {
+    e.preventDefault();
     try {
-      if (name && email) {
-        console.log(name, " ", email);
+      // if (this.name && this.email) {
         axios
           .post(
             "http://localhost:5000/user/edit",
-            { id: id, name: name, email: email },
+            { id: this.id, name: this.name, email: this.email },
             {
               headers: {
                 "Content-Type": "application/json",
@@ -40,53 +47,91 @@ const Profile = () => {
           .then((response) => {
             console.log(response.data);
             if (response.data.status === "ok") {
-              setUpdate(!update);
+              this.store();
+              this.name = "";
+              this.email = "";
               alert("Information Updated!!");
+              window.location.reload(false);
             } else {
               alert(response.data.error);
             }
           });
-      }
+      // }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");
     }
   };
 
+  render() {
   return (
     <div>
-      <Navbar />
+      <Navbar>
+        <Container>
+          <Navbar.Brand>
+            <Nav.Link href="/dashboard">Online Doctor</Nav.Link>
+          </Navbar.Brand>
+          <Nav.Item>
+            <Nav.Link href="/chats">Your Chat</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/appointments">Appointments</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              href="/login"
+              onClick={(e) => {
+                localStorage.removeItem("user");
+              }}
+            >
+              Logout
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <LinkContainer to="/profile">
+              <Nav.Link href="/profile">
+                <FaUserCircle />{" "}
+                {"Hello " + JSON.parse(localStorage.getItem("user")).name}
+              </Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
+        </Container>
+      </Navbar>
       <Row>
         <Col className="account1">
           <div>
-            <form className="account-form" onSubmit={() => handleSubmit()}>
+            <form className="account-form" onSubmit={this.handleSubmit}>
               <div>
                 <h3>Profile</h3>
               </div>
               <div>
-                Username
+              {console.log(this.props.user.name)}
+                Username : {this.props.user.name}
                 <input
                   type="text"
-                  placeholder="Username"
                   className="input"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={this.name}
+                  onChange={(e) => {
+                    this.name = e.target.value;
+                  }}
                 />
               </div>
               <div>
-                Email
+                Email : {this.props.user.email}
                 <input
                   type="text"
-                  placeholder="Email"
                   className="input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={this.email}
+                  onChange={(e) => {
+                    this.email = e.target.value;
+                  }}
                 />
               </div>
               <div className=" d-flex justify-content-center">
                 <button className="submit" type="submit">
                   Save
                 </button>
+              
               </div>
             </form>
           </div>
@@ -94,6 +139,7 @@ const Profile = () => {
       </Row>
     </div>
   );
+  }
 };
 
 export default Profile;

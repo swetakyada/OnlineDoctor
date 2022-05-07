@@ -36,7 +36,7 @@ function App() {
           />
           <Route
             path="/profile"
-            element={localStorage.getItem("user") ? <Profile /> : <Signin />}
+            element={localStorage.getItem("user") ? <Profile user={JSON.parse(localStorage.getItem("user"))} /> : <Signin />}
           />
           <Route
             path="/changePassword"
@@ -56,15 +56,10 @@ function App() {
               )
             }
           />
+          
           <Route
             path="/doctor/profile"
-            element={
-              localStorage.getItem("doctor") ? (
-                <DoctorProfile />
-              ) : (
-                <DoctorSignin />
-              )
-            }
+            element={localStorage.getItem("doctor") ? <DoctorProfile doctor={JSON.parse(localStorage.getItem("doctor"))} /> : <DoctorSignin />}
           />
           <Route
             path="/doctor/chats"

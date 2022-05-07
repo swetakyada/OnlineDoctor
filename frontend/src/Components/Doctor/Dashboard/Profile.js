@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {Component, useState, useEffect } from "react";
 import "./Profile.css";
 import { Row, Col } from "react-bootstrap";
 import { Navbar, Container, Card, Button, Nav } from "react-bootstrap";
@@ -8,63 +8,126 @@ import { FaUserCircle } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 
-const DoctorProfile = () => {
-  var doctor = JSON.parse(localStorage.getItem("doctor"));
-  const id = doctor.id;
-  const [name, setName] = useState(doctor.name);
-  const [email, setEmail] = useState(doctor.email);
-  const [speciality, setSpeciality] = useState(doctor.speciality);
-  const [description, setDescription] = useState(doctor.description);
-  const [update, setUpdate] = useState(false);
+class DoctorProfile extends Component {
+  constructor(props) {
+    super(props);
+    this.id = this.props.doctor.id;
+    this.state = {
+      name: "",
+      email: "",
+      speciality:"",
+      description:"",
+    }
+    this.store = this.store.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-  useEffect(() => {
-    console.log(email);
+  store() {
     localStorage.setItem(
       "doctor",
       JSON.stringify({
-        id: id,
-        name: name,
-        email: email,
-        speciality: speciality,
-        description: description,
+        id: this.id,
+        name: this.name,
+        email: this.email,
+        speciality:this.speciality,
+        description:this.description,
       })
     );
-  }, [update]);
-
-  const handleSubmit = async (event) => {
+  }
+  async handleSubmit(e) {
+    e.preventDefault();
     try {
-      if (name && email && speciality && description) {
-        // console.log(name, " ", email);
-        const response = await axios.post(
-          "http://localhost:5000/doctor/edit",
-          {
-            id: id,
-            name: name,
-            email: email,
-            speciality: speciality,
-            description: description,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // console.log(response.data);
-        if (response.data.status === "ok") {
-          setUpdate(!update);
-          alert("Information Updated!!");
-        } else {
-          alert(response.data.error);
-        }
-      }
+      // if (this.name && this.email) {
+        axios
+          .post(
+            "http://localhost:5000/doctor/edit",
+            { id: this.id, name: this.name, email: this.email , speciality:this.speciality,description:this.description},
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((response) => {
+            console.log(response.data);
+            if (response.data.status === "ok") {
+              this.store();
+              this.name = "";
+              this.email = "";
+              this.speciality="";
+              this.description="";
+              
+              alert("Information Updated!!");
+              window.location.reload(false);
+            } else {
+              alert(response.data.error);
+            }
+          });
+      // }
     } catch (error) {
       console.log(error);
       alert("Error occured!!");
     }
   };
 
+// const DoctorProfile = () => {
+//   var doctor = JSON.parse(localStorage.getItem("doctor"));
+//   const id = doctor.id;
+//   const [name, setName] = useState(doctor.name);
+//   const [email, setEmail] = useState(doctor.email);
+//   const [speciality, setSpeciality] = useState(doctor.speciality);
+//   const [description, setDescription] = useState(doctor.description);
+//   const [update, setUpdate] = useState(false);
+
+//   useEffect(() => {
+//     console.log(email);
+//     localStorage.setItem(
+//       "doctor",
+//       JSON.stringify({
+//         id: id,
+//         name: name,
+//         email: email,
+//         speciality: speciality,
+//         description: description,
+//       })
+//     );
+//   }, [update]);
+
+//   const handleSubmit = async (event) => {
+//     try {
+//       if (name && email && speciality && description) {
+//         // console.log(name, " ", email);
+//         const response = await axios.post(
+//           "http://localhost:5000/doctor/edit",
+//           {
+//             id: id,
+//             name: name,
+//             email: email,
+//             speciality: speciality,
+//             description: description,
+//           },
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//           }
+//         );
+
+//         // console.log(response.data);
+//         if (response.data.status === "ok") {
+//           setUpdate(!update);
+//           alert("Information Updated!!");
+//         } else {
+//           alert(response.data.error);
+//         }
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       alert("Error occured!!");
+//     }
+//   };
+
+render() {
   return (
     <div>
       <Navbar>
@@ -89,7 +152,7 @@ const DoctorProfile = () => {
             <LinkContainer to="/doctor/profile">
               <Nav.Link to="/doctor/profile">
                 <FaUserCircle />
-                {" Hello " + doctor.name}
+                {" Hello " + this.props.doctor.name}
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>
@@ -99,52 +162,60 @@ const DoctorProfile = () => {
         <Col className="account1">
           <div>
             <br />
-            <form className="account-form1" onSubmit={() => handleSubmit()}>
+            <form className="account-form1" onSubmit={this.handleSubmit}>
               <div>
                 <h3>Profile</h3>
               </div>
               <br />
               <div>
-                Username
+                Username : {this.props.doctor.name}
                 <input
                   type="text"
                   placeholder="Username"
                   className="input"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={this.name}
+                  onChange={(e) => {
+                    this.name = e.target.value;
+                  }}
                 />
               </div>
               <br />
               <div>
-                Email
+                Email :  {this.props.doctor.email}
                 <input
                   type="text"
                   placeholder="Email"
                   className="input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={this.email}
+                  onChange={(e) => {
+                    this.email = e.target.value;
+                  }}
                 />
               </div>
               <br />
               <div>
-                Speciality
+                Speciality :  {this.props.doctor.speciality}
                 <input
                   type="text"
                   placeholder="Speciality"
                   className="input"
-                  value={speciality}
-                  onChange={(e) => setSpeciality(e.target.value)}
+                  value={this.speciality}
+                  onChange={(e) => {
+                    this.speciality = e.target.value;
+                  }}
                 />
               </div>
               <br />
               <div>
-                Description
+                Description :  {this.props.doctor.description}
                 <input
                   type="text"
                   placeholder="Description"
                   className="input"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={this.description}
+                  onChange={(e) => {
+                    this.description = e.target.value;
+                  }}
                 />
               </div>
               <div className="d-flex justify-content-center">
@@ -157,7 +228,9 @@ const DoctorProfile = () => {
         </Col>
       </Row>
     </div>
+  
   );
+ }
 };
 
 export default DoctorProfile;
